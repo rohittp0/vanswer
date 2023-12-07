@@ -51,8 +51,8 @@ def download_file_from_google_drive(file_id, file_name):
 
 def download():
     # Process the CSV
-    input_csv = 'data.csv'  # Replace with your CSV file name
-    output_csv = 'paths.csv'
+    input_csv = 'res/data.csv'  # Replace with your CSV file name
+    output_csv = 'res/paths.csv'
 
     with open(input_csv, newline='', encoding='utf-8') as csvfile, \
             open(output_csv, 'w', newline='', encoding='utf-8') as outfile:
