@@ -6,3 +6,4 @@ res/files/
 res/credentials.json
 *.pickle
 res/paths.csv
+**/images/
