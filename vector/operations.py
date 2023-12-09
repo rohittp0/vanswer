@@ -31,7 +31,7 @@ def generate_image_description(image: BytesIO) -> str:
     return ""
 
 
-def create_embedding(text: List[str]) -> torch.Tensor:
+def texts_to_embeddings(text: List[str]) -> List[float]:
     tokenizer, model = get_embedder()
 
     encoded_input = tokenizer(text, padding=True, truncation=True, return_tensors='pt')
@@ -41,19 +41,19 @@ def create_embedding(text: List[str]) -> torch.Tensor:
         model_output = model(**encoded_input)
 
     embeddings = mean_pooling(model_output, encoded_input['attention_mask'])
-    return F.normalize(embeddings, p=2, dim=1)
+    return F.normalize(embeddings, p=2, dim=0).tolist()
 
 
-def convert_to_embeddings(pdf_elements: List[Embedding]) -> List[Embedding]:
+def elements_to_embeddings(pdf_elements: List[Embedding]) -> List[Embedding]:
     embeddings = []
 
     for index in range(0, len(pdf_elements), EmbeddingParams.BATCH_SIZE.value):
         batch = pdf_elements[index:index + EmbeddingParams.BATCH_SIZE.value]
         texts = [element.text for element in batch]
-        texts = create_embedding(texts)
+        texts = texts_to_embeddings(texts)
 
         for j, text in enumerate(texts):
-            pdf_elements[index + j].embedding = text.squeeze().tolist()
+            pdf_elements[index + j].embedding = text
 
         embeddings.extend(batch)
 
@@ -99,10 +99,3 @@ def process_pdf(pdf_file: BytesIO) -> List[Embedding]:
 
     doc.close()
     return chunks
-
-
-if __name__ == '__main__':
-    pdf = BytesIO(open('../res/files/0ByE9Mc41r3Ora2N4dVFKYmhvMW8.pdf', 'rb').read())
-    elements = process_pdf(pdf)
-    embed = convert_to_embeddings(elements)
-    print(embed)

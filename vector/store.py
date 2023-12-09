@@ -1,6 +1,7 @@
 from enum import Enum
 
 import torch
+from pymilvus import Milvus
 from transformers import AutoTokenizer, AutoModel
 
 
@@ -17,8 +18,13 @@ class EmbeddingParams(Enum):
     DIMENSION = 768
 
 
+MILVUS_HOST = 'localhost'
+MILVUS_PORT = 19530
+MILVUS_COLLECTION = 'pdf'
+
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 embedder = None
+milvus = None
 
 
 def get_embedder():
@@ -33,3 +39,11 @@ def get_embedder():
         embedder[1].eval()
 
     return embedder
+
+
+def get_milvus():
+    global milvus
+    if milvus is None:
+        milvus = Milvus(host=MILVUS_HOST, port=MILVUS_PORT)
+
+    return milvus

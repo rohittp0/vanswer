@@ -3,7 +3,7 @@ import uvicorn
 from io import BytesIO
 
 from vector.db import store_in_milvus, MetaData
-from vector.operations import convert_to_embeddings, process_pdf
+from vector.operations import elements_to_embeddings, process_pdf, texts_to_embeddings
 
 app = FastAPI()
 
@@ -12,8 +12,9 @@ app = FastAPI()
 async def upload_pdf(meta: MetaData, file: UploadFile = File(...)):
     pdf_file = BytesIO(await file.read())
     pdf_elements = process_pdf(pdf_file)
-    embeddings = convert_to_embeddings(pdf_elements)
+    embeddings = elements_to_embeddings(pdf_elements)
 
+    meta.description = texts_to_embeddings([meta.description])[0]
     store_in_milvus(embeddings, meta)
 
     return {"status": "Processed and stored"}

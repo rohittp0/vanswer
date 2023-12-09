@@ -7,3 +7,5 @@ res/credentials.json
 *.pickle
 res/paths.csv
 **/images/
+**/embeddings/
+volumes/
