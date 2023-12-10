@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 
 import torch
@@ -18,13 +19,13 @@ class EmbeddingParams(Enum):
     DIMENSION = 768
 
 
-MILVUS_HOST = 'localhost'
-MILVUS_PORT = 19530
+MILVUS_HOST = os.getenv('MILVUS_HOST', 'localhost')
+MILVUS_PORT = os.getenv('MILVUS_PORT', '19530')
 META_DATA_COLLECTION = 'pdf_metadata'
 EMBEDDINGS_COLLECTION = 'pdf_embeddings'
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-connections.connect("default", host="localhost", port="19530")
+connections.connect("default", host=MILVUS_HOST, port=MILVUS_PORT)
 
 embedder = None
 

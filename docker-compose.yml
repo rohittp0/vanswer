@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   etcd:
-    container_name: milvus-etcd
+    container_name: etcd
     image: quay.io/coreos/etcd:v3.5.5
     environment:
       - ETCD_AUTO_COMPACTION_MODE=revision
@@ -19,7 +19,7 @@ services:
       retries: 3
 
   minio:
-    container_name: milvus-minio
+    container_name: minio
     image: minio/minio:RELEASE.2023-03-20T20-16-18Z
     environment:
       MINIO_ACCESS_KEY: minioadmin
@@ -36,8 +36,8 @@ services:
       timeout: 20s
       retries: 3
 
-  standalone:
-    container_name: milvus-standalone
+  milvus:
+    container_name: milvus
     image: milvusdb/milvus:v2.3.3
     command: ["milvus", "run", "standalone"]
     security_opt:
@@ -66,19 +66,28 @@ services:
     ports:
       - "9090:3000"
     environment:
-      MILVUS_URL: "http://standalone:19530"
+      MILVUS_URL: "http://milvus:19530"
     depends_on:
-      - "standalone"
+      - "milvus"
 
   fastapi-app:
     container_name: fastapi-app
     build: vector
+    environment:
+      MILVUS_HOST: "milvus"
+      MILVUS_PORT: "19530"
     ports:
       - "8080:8000"
     volumes:
       - ./vector:/usr/src/app
+      - pip-cache:/root/.cache/pip
+      - hf-models:/root/.cache/huggingface
     depends_on:
-      - "standalone"
+      - "milvus"
+
+volumes:
+  pip-cache:
+  hf-models:
 
 networks:
   default:
