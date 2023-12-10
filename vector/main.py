@@ -4,9 +4,9 @@ from io import BytesIO
 
 from pymilvus import Collection
 
-from vector.db import store_in_milvus, MetaData
-from vector.operations import elements_to_embeddings, process_pdf, texts_to_embeddings
-from vector.store import EMBEDDINGS_COLLECTION, META_DATA_COLLECTION
+from db import store_in_milvus, MetaData
+from operations import elements_to_embeddings, process_pdf, texts_to_embeddings
+from store import EMBEDDINGS_COLLECTION, META_DATA_COLLECTION
 
 app = FastAPI()
 

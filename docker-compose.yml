@@ -76,7 +76,7 @@ services:
     ports:
       - "8080:8000"
     volumes:
-      - .:/usr/src/app
+      - ./vector:/usr/src/app
     depends_on:
       - "standalone"
 

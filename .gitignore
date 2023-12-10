@@ -1,6 +1,6 @@
 venv/
 .idea/
-.env
+**/.env
 media/
 res/files/
 res/credentials.json
@@ -9,3 +9,4 @@ res/paths.csv
 **/images/
 **/embeddings/
 volumes/
+server/media/

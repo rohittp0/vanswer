@@ -6,8 +6,8 @@ from typing import List
 
 from tqdm import tqdm
 
-from vector.db import MetaData, Embedding, store_in_milvus, get_or_create_collections
-from vector.operations import process_pdf, elements_to_embeddings, texts_to_embeddings
+from db import MetaData, Embedding, store_in_milvus, get_or_create_collections
+from operations import process_pdf, elements_to_embeddings, texts_to_embeddings
 
 save_dir = '../res/embeddings'
 
