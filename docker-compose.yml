@@ -78,7 +78,7 @@ services:
       MILVUS_HOST: "milvus"
       MILVUS_PORT: "19530"
     ports:
-      - "8080:8000"
+      - "4000:4000"
     volumes:
       - ./vector:/usr/src/app
       - pip-cache:/root/.cache/pip
@@ -86,11 +86,6 @@ services:
     depends_on:
       - "milvus"
     restart: unless-stopped
-    healthcheck:
-      test: curl -f http://fastapi-app:8000/search/elements/?query=abc
-      start_period: 10s
-      timeout: 60s
-      retries: 3
 
 volumes:
   pip-cache:
