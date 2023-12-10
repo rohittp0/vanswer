@@ -14,17 +14,17 @@ class EmbeddingParams(Enum):
     MODEL = 'jinaai/jina-embeddings-v2-base-en'
     TOKENIZER = 'jinaai/jina-embeddings-v2-base-en'
     CHUNK_SIZE = 8000
-    BATCH_SIZE = 8
+    BATCH_SIZE = 1
     DIMENSION = 768
 
 
 MILVUS_HOST = 'localhost'
 MILVUS_PORT = 19530
-MILVUS_COLLECTION = 'pdf'
+META_DATA_COLLECTION = 'pdf_metadata'
+EMBEDDINGS_COLLECTION = 'pdf_embeddings'
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 embedder = None
-milvus = None
 
 
 def get_embedder():
@@ -39,11 +39,3 @@ def get_embedder():
         embedder[1].eval()
 
     return embedder
-
-
-def get_milvus():
-    global milvus
-    if milvus is None:
-        milvus = Milvus(host=MILVUS_HOST, port=MILVUS_PORT)
-
-    return milvus
