@@ -59,6 +59,7 @@ services:
     depends_on:
       - "etcd"
       - "minio"
+    restart: unless-stopped
 
   attu:
     container_name: milvus-attu
@@ -84,6 +85,12 @@ services:
       - hf-models:/root/.cache/huggingface
     depends_on:
       - "milvus"
+    restart: unless-stopped
+    healthcheck:
+      test: curl -f http://fastapi-app:8000/search/elements/?query=abc
+      start_period: 10s
+      timeout: 60s
+      retries: 3
 
 volumes:
   pip-cache:

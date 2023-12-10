@@ -81,4 +81,4 @@ async def search_meta(query: str, limit: int = 10, expr: str = None):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", port=8080, reload=True)

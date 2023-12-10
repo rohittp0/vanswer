@@ -1,8 +1,6 @@
 import base64
 import io
 
-import filetype
-from PyPDF2 import PdfReader
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
@@ -10,7 +8,6 @@ from django.shortcuts import render
 from pdf2image import convert_from_path
 import weaviate
 import weaviate.classes as wvc
-import uuid
 
 client = weaviate.connect_to_local()
 
