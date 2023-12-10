@@ -95,7 +95,6 @@ def get_or_create_embeddings_collection():
 
 
 def get_or_create_collections():
-    connections.connect("default", host="localhost", port="19530")
     meta = get_or_create_meta_data_collection()
     embeddings = get_or_create_embeddings_collection()
 

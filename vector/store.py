@@ -1,7 +1,7 @@
 from enum import Enum
 
 import torch
-from pymilvus import Milvus
+from pymilvus import Milvus, connections
 from transformers import AutoTokenizer, AutoModel
 
 
@@ -24,6 +24,8 @@ META_DATA_COLLECTION = 'pdf_metadata'
 EMBEDDINGS_COLLECTION = 'pdf_embeddings'
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
+connections.connect("default", host="localhost", port="19530")
+
 embedder = None
 
 
