@@ -27,3 +27,6 @@ class MetaData(models.Model):
     ):
         self.description_vector = SearchVector('description')
         super().save(force_insert, force_update, using, update_fields)
+
+    def __str__(self):
+        return self.name
