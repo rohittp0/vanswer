@@ -2,49 +2,54 @@
 {% load static %}
 
 {% block style %}
-<link rel="stylesheet" href="{% static 'css/search.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
 {% endblock %}
 
 
 {% block content %}
 
-<div class="container mt-5">
-    <!-- Search Form -->
-    <form method="GET">
-        {% csrf_token %}
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Search..." name="query" value="{{ query }}">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit">Search</button>
-            </div>
-        </div>
-    </form>
-
-    <!-- Search Results -->
-    <div class="row">
-        {% for result in results %}
-        <div class="col-md-4 mb-3">
-            <div class="card">
-                {% if result.image_url %}
-
-                <img class="card-img-top" src="{{ result.image_url }}" alt="No image">
-
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ result.title }}</h5>
-                    <p class="card-text">{{ result.description|truncatechars:100 }}</p>
-
-                    {% if result.read_more_url %}
-                    <a href="{{ result.read_more_url }}" class="btn btn-primary">Read More</a>
-                    {% endif %}
+    <div class="container mt-5">
+        <!-- Search Form -->
+        <form method="GET">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search..." name="query" value="{{ query }}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
                 </div>
             </div>
+        </form>
+
+        <!-- Search Results -->
+        <div class="row">
+            {% for result in results %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        {% if result.image_url %}
+
+                            <object data="{{ result.image_url }}" type="application/pdf" width="300" height="200"
+                                    class="card-img-top">
+                                <iframe src="{{ result.image_url }}" width="300" height="200" class="card-img-top">
+                                    This browser does not support PDFs. Please download the PDF to view it.
+                                </iframe>
+                            </object>
+
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ result.title }}</h5>
+                            <p class="card-text">{{ result.description|truncatechars:100 }}</p>
+
+                            {% if result.read_more_url %}
+                                <a href="{{ result.read_more_url }}" class="btn btn-primary">Read More</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No results found.</p>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p>No results found.</p>
-        {% endfor %}
     </div>
-</div>
 
 
 {% endblock content %}

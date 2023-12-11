@@ -13,4 +13,4 @@ class MetaData(models.Model):
     description = models.TextField()
     organization = models.CharField(max_length=256, default="")
     meta_id = models.BigIntegerField(default=0)
-    file = models.FileField(upload_to='files/')
+    file = models.FileField()

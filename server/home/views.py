@@ -14,7 +14,7 @@ def search(request):
         return render(request, 'home/search.html', {'query': "", 'results': []})
 
     api_result = requests.get(settings.VECTOR_API_URL + "/search/elements", params={
-        "expr": "",
+        "expr": "type == 0",
         "query": query_text,
         "limit": 10,
     }).json()
@@ -22,22 +22,16 @@ def search(request):
     meta_ids = list({o["meta_id"] for o in api_result})
     metas = MetaData.objects.filter(meta_id__in=meta_ids).all()
 
-    results = [api_result.filter(lambda x: x["meta_id"] == meta.meta_id) for meta in metas]
-    print(results)
+    results = []
 
     # Process and display results
     for meta in metas:
-        # item = o.properties
-        # print(o.uuid, o.metadata)
-        # if o.metadata.certainty < 0.75:
-        #     continue
-        # results.append({
-        #     'image_url': ('data:image/png;base64,' + item['image']) if item.get('location') else False,
-        #     'title': "",
-        #     'description': item['description'],
-        #     'read_more_url': getattr(settings, "MEDIA_URL", None) + item.get('location') if item.get(
-        #         'location') else False,
-        # }, )
-        pass
+        for element in filter(lambda x: x["meta_id"] == meta.meta_id, api_result):
+            results.append({
+                'image_url': f"{meta.file.url}#page={element['index']}",
+                'title': f"{meta.name} - Page No: {element['index']}",
+                'description': meta.description,
+                'read_more_url': meta.file.url,
+            })
 
-    return render(request, 'home/search.html', {'query': query_text, 'results': []})
+    return render(request, 'home/search.html', {'query': query_text, 'results': results})
