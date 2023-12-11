@@ -10,7 +10,7 @@
 
 <div class="container mt-5">
     <!-- Search Form -->
-    <form action="/" method="POST">
+    <form method="GET">
         {% csrf_token %}
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="Search..." name="query" value="{{ query }}">

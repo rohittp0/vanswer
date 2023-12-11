@@ -10,3 +10,4 @@ res/paths.csv
 **/embeddings/
 volumes/
 server/media/
+res/query.csv

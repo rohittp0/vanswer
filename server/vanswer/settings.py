@@ -20,6 +20,8 @@ DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 
 HOST = os.getenv("HOST", "localhost")
 
+VECTOR_API_URL = os.getenv("VECTOR_API_URL", "http://localhost:8080")
+
 ALLOWED_HOSTS = [HOST]
 CSRF_TRUSTED_ORIGINS = [f'https://{HOST}', f'http://{HOST}']
 
