@@ -36,6 +36,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 DEFAULT_HTTP_PROTOCOL = "https"
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,6 +55,8 @@ INSTALLED_APPS = [
     'allauth.account',  # must
     'allauth.socialaccount',  # must
     'allauth.socialaccount.providers.google',  # new
+
+    'django.contrib.postgres',
 
     'home'
 ]

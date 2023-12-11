@@ -13,7 +13,13 @@
         <form method="GET">
             {% csrf_token %}
             <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Search..." name="query" value="{{ query }}">
+                <div class="input-group-prepend">
+                    <select class="form-control" name="search_type">
+                        <option value="meta" selected>Description</option>
+                        <option value="elements">Content</option>
+                    </select>
+                </div>
+                <input type="text" class="form-control mx-1" placeholder="Search..." name="query" value="{{ query }}">
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="submit">Search</button>
                 </div>
@@ -27,12 +33,12 @@
                     <div class="card">
                         {% if result.image_url %}
 
-{#                            <object data="{{ result.image_url }}" type="application/pdf" width="300" height="200"#}
-{#                                    class="card-img-top">#}
-                                <iframe src="{{ result.image_url }}" width="300" height="200" class="card-img-top">
+                            <object data="{{ result.image_url }}" width="300" height="200"
+                                    class="card-img-top">
+                                <iframe src="{{ result.image_url }}" width="300" height="200" class="card-img-top" loading="lazy">
                                     This browser does not support PDFs. Please download the PDF to view it.
                                 </iframe>
-{#                            </object>#}
+                            </object>
 
                         {% endif %}
                         <div class="card-body">
