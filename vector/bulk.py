@@ -14,19 +14,20 @@ save_dir = '../res/embeddings'
 
 def read_csv_and_create_meta_data(file_path):
     meta_data_list = []
+    relative_path = os.path.dirname(file_path)
 
     with open(file_path, 'r') as f:
         reader = csv.reader(f)
         next(reader)  # Skip the header row
 
         for row in reader:
-            path = os.path.join("../res", row[1])
+            path = os.path.join(relative_path, row[1])
             meta_data = MetaData(
                 name=row[0],
                 language=row[2],
                 type=row[3],
                 tags=[t.strip()[:64] for t in row[4].split(',')],
-                state=[t.strip()[:64] for t in row[5].split(',')],
+                states=[t.strip()[:64] for t in row[5].split(',')],
                 description=row[6],
                 organization=row[9]
             )
@@ -35,65 +36,77 @@ def read_csv_and_create_meta_data(file_path):
     return meta_data_list
 
 
-def save_data_to_file_with_pickle(meta: MetaData, embeddings: List[Embedding], output_file: str):
-    with open(output_file, 'wb') as f:
-        pickle.dump({'meta': meta, 'embeddings': embeddings}, f)
-
-
-def load_data_from_file_with_pickle(file_path: str) -> (MetaData, List[Embedding]):
-    with open(file_path, 'rb') as f:
-        data = pickle.load(f)
-    return data['meta'], data['embeddings']
-
-
 def main():
     metas = read_csv_and_create_meta_data('../res/paths.csv')
 
     # Create save directory
     os.makedirs(save_dir, exist_ok=True)
-    i = 0
 
-    for path, meta in tqdm(metas):
-        save = os.path.join(save_dir, f'{i}.pkl')
+    for path, meta in tqdm(metas, "Processing PDFs, creating embeddings"):
+        save = os.path.join(save_dir, f'{os.path.basename(path)}.pkl')
 
         if os.path.exists(save):
-            i += 1
             continue
 
         try:
             with open(path, 'rb') as f:
                 pdf = BytesIO(f.read())
                 elements = process_pdf(pdf)
-                embeds = elements_to_embeddings(elements)
 
-            if isinstance(meta.description, str):
-                meta.description = texts_to_embeddings([meta.description])[0]
-            else:
-                raise ValueError("Description is not a string")
+            embeds = elements_to_embeddings(elements)
+            description = meta.description
+
+            assert isinstance(description, str)
+
+            meta.description = texts_to_embeddings([description])[0]
+
+            with open(save, 'wb') as f:
+                pickle.dump({
+                    'meta': meta, 'embeddings': embeds, "description": description, 'path': path
+                }, f)
         except Exception as e:
             print(f"Error processing {path}")
             print(e)
-            continue
-
-        save_data_to_file_with_pickle(meta, embeds, save)
-        i += 1
+            raise e
 
 
-def save_to_db():
-    for i in tqdm(range(len(os.listdir(save_dir)))):
-        file_path = os.path.join(save_dir, f'{i}.pkl')
-        meta, embeddings = load_data_from_file_with_pickle(file_path)
-
-        if "state" in {**meta.__dict__}:
-            meta.states = [t[:64] for t in meta.state.split(',')]
-            del meta.state
-
-        store_in_milvus(embeddings, meta)
+def save_to_db(clean=False):
+    results = []
 
     meta_collection, embed_collection = get_or_create_collections()
+
+    if clean:
+        meta_collection.drop()
+        embed_collection.drop()
+        meta_collection, embed_collection = get_or_create_collections()
+
+    inserted = set()
+
+    for file_path in tqdm(os.listdir(save_dir), "Inserting to DB"):
+        with open(os.path.join(save_dir, file_path), 'rb') as f:
+            data = pickle.load(f)
+
+        if data["path"] in inserted:
+            continue
+
+        inserted.add(data["path"])
+
+        meta, embeddings = data["meta"], data["embeddings"]
+
+        meat_id = store_in_milvus(embeddings, meta)
+        meta.description = data["description"]
+
+        results.append((meat_id, meta.model_dump(), data["path"]))
+
+    with open('results.pkl', 'wb') as f:
+        pickle.dump(results, f)
+
+    print("Inserted", len(results), "files")
+
     meta_collection.flush()
     embed_collection.flush()
 
 
 if __name__ == '__main__':
-    save_to_db()
+    main()
+    save_to_db(clean=True)
