@@ -26,7 +26,7 @@ def read_csv_and_create_meta_data(file_path):
                 language=row[2],
                 type=row[3],
                 tags=[t.strip()[:64] for t in row[4].split(',')],
-                state=[t.strip()[:64] for t in row[5].split(',')],
+                states=[t.strip()[:64] for t in row[5].split(',')],
                 description=row[6],
                 organization=row[9]
             )
@@ -79,21 +79,41 @@ def main():
         i += 1
 
 
-def save_to_db():
+def save_to_db(clean=False):
+    results = []
+    metas = read_csv_and_create_meta_data('../res/paths.csv')
+
+    meta_collection, embed_collection = get_or_create_collections()
+
+    if clean:
+        meta_collection.drop()
+        embed_collection.drop()
+        meta_collection, embed_collection = get_or_create_collections()
+
+    inserted = set()
+
     for i in tqdm(range(len(os.listdir(save_dir)))):
         file_path = os.path.join(save_dir, f'{i}.pkl')
         meta, embeddings = load_data_from_file_with_pickle(file_path)
+
+        if metas[i][0] in inserted:
+            continue
+
+        inserted.add(metas[i][0])
 
         if "state" in {**meta.__dict__}:
             meta.states = [t[:64] for t in meta.state.split(',')]
             del meta.state
 
-        store_in_milvus(embeddings, meta)
+        meat_id = store_in_milvus(embeddings, meta)
+        results.append((meat_id, meta, metas[i][0]))
 
-    meta_collection, embed_collection = get_or_create_collections()
+    with open('../res/results.pkl', 'wb') as f:
+        pickle.dump(results, f)
+
     meta_collection.flush()
     embed_collection.flush()
 
 
 if __name__ == '__main__':
-    save_to_db()
+    save_to_db(clean=True)
