@@ -27,12 +27,12 @@
                     <div class="card">
                         {% if result.image_url %}
 
-                            <object data="{{ result.image_url }}" type="application/pdf" width="300" height="200"
-                                    class="card-img-top">
+{#                            <object data="{{ result.image_url }}" type="application/pdf" width="300" height="200"#}
+{#                                    class="card-img-top">#}
                                 <iframe src="{{ result.image_url }}" width="300" height="200" class="card-img-top">
                                     This browser does not support PDFs. Please download the PDF to view it.
                                 </iframe>
-                            </object>
+{#                            </object>#}
 
                         {% endif %}
                         <div class="card-body">

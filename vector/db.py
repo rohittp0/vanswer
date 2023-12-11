@@ -1,7 +1,7 @@
 from typing import List
 
 from pydantic import BaseModel
-from pymilvus import utility, Collection, CollectionSchema, FieldSchema, DataType, connections
+from pymilvus import utility, Collection, CollectionSchema, FieldSchema, DataType
 
 from store import ElementType, EmbeddingParams, META_DATA_COLLECTION, EMBEDDINGS_COLLECTION
 
@@ -30,8 +30,6 @@ class Embedding(BaseModel):
             assert len(data['embedding']) == EmbeddingParams.DIMENSION.value
         else:
             data['embedding'] = [0] * EmbeddingParams.DIMENSION.value
-
-        assert len(data['text']) <= EmbeddingParams.CHUNK_SIZE.value
 
         super().__init__(**data)
 

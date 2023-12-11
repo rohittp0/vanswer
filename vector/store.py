@@ -2,7 +2,7 @@ import os
 from enum import Enum
 
 import torch
-from pymilvus import Milvus, connections
+from pymilvus import connections
 from transformers import AutoTokenizer, AutoModel
 
 
@@ -12,11 +12,11 @@ class ElementType(Enum):
 
 
 class EmbeddingParams(Enum):
-    MODEL = 'jinaai/jina-embeddings-v2-base-en'
-    TOKENIZER = 'jinaai/jina-embeddings-v2-base-en'
-    CHUNK_SIZE = 8000
-    BATCH_SIZE = 1
-    DIMENSION = 768
+    MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
+    TOKENIZER = 'sentence-transformers/all-MiniLM-L6-v2'
+    CHUNK_SIZE = 512
+    BATCH_SIZE = 8
+    DIMENSION = 384
 
 
 MILVUS_HOST = os.getenv('MILVUS_HOST', 'localhost')

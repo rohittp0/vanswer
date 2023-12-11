@@ -2,7 +2,6 @@ from io import BytesIO
 from typing import List
 
 import fitz
-from PIL import Image
 
 import torch
 import torch.nn.functional as F
@@ -61,41 +60,34 @@ def elements_to_embeddings(pdf_elements: List[Embedding]) -> List[Embedding]:
 
 
 def process_pdf(pdf_file: BytesIO) -> List[Embedding]:
+    # noinspection PyUnresolvedReferences
     doc = fitz.open(stream=pdf_file, filetype="pdf")
+    tokenizer = get_embedder()[0]
+
     chunks = []
-    current_chunk = ''
-    start_page = None
-    end_page = None
 
     for page_num in range(len(doc)):
         page = doc.load_page(page_num)
-
-        # Extract text
         text = page.get_text()
-        if start_page is None:
-            start_page = page_num
 
-        if len(current_chunk) + len(text) <= EmbeddingParams.CHUNK_SIZE.value:
-            current_chunk += text
-            end_page = page_num
-        else:
-            current_chunk = current_chunk[:EmbeddingParams.CHUNK_SIZE.value]
-            embedding = Embedding(type=ElementType.TEXT, index=start_page,
-                                  offset=end_page - start_page, text=current_chunk)
+        # Tokenize the text
+        tokens = tokenizer.tokenize(text)
+        offset = 0
+
+        # Split tokens into chunks
+        for i in range(0, len(tokens), EmbeddingParams.CHUNK_SIZE.value):
+            chunk_tokens = tokens[i:i + EmbeddingParams.CHUNK_SIZE.value]
+            chunk_text = tokenizer.convert_tokens_to_string(chunk_tokens)
+            embedding = Embedding(type=ElementType.TEXT, index=page_num, offset=offset, text=chunk_text)
             chunks.append(embedding)
-            current_chunk, start_page, end_page = text, page_num, page_num
+            offset += len(chunk_text)
 
+        # Process images on the page
         for index, img in enumerate(page.get_images(full=True)):
-            xref = img[0]
-            image_bytes = doc.extract_image(xref)["image"]
+            image_bytes = doc.extract_image(img[0])["image"]
             text = generate_image_description(BytesIO(image_bytes))
             embedding = Embedding(type=ElementType.IMAGE, index=page_num, offset=index, text=text)
             chunks.append(embedding)
-
-    if current_chunk:
-        embedding = Embedding(type=ElementType.TEXT, index=start_page, offset=end_page - start_page,
-                              text=current_chunk)
-        chunks.append(embedding)
 
     doc.close()
     return chunks
