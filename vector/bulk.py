@@ -106,10 +106,12 @@ def save_to_db(clean=False):
             del meta.state
 
         meat_id = store_in_milvus(embeddings, meta)
-        results.append((meat_id, meta, metas[i][0]))
+        results.append((meat_id, meta.model_dump(), metas[i][0]))
 
     with open('../res/results.pkl', 'wb') as f:
         pickle.dump(results, f)
+
+    print("Inserted", len(results), "files")
 
     meta_collection.flush()
     embed_collection.flush()

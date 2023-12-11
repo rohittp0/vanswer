@@ -11,3 +11,4 @@ res/paths.csv
 volumes/
 server/media/
 res/query.csv
+/res/results.pkl
