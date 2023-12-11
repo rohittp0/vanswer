@@ -106,6 +106,8 @@ def save_to_db(clean=False):
             del meta.state
 
         meat_id = store_in_milvus(embeddings, meta)
+        meta.description = metas[i][1].description
+
         results.append((meat_id, meta.model_dump(), metas[i][0]))
 
     with open('../res/results.pkl', 'wb') as f:

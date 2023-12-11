@@ -19,17 +19,19 @@ def search(request):
         "limit": 10,
     }).json()
 
-    meta_ids = list({o["meta_id"] for o in api_result})
+    api_result = {(o["meta_id"], o["index"]): o for o in api_result}
+
+    meta_ids = list({o[0] for o in api_result})
     metas = MetaData.objects.filter(meta_id__in=meta_ids).all()
 
     results = []
 
     # Process and display results
     for meta in metas:
-        for element in filter(lambda x: x["meta_id"] == meta.meta_id, api_result):
+        for element in filter(lambda x: x[0] == meta.meta_id, api_result):
             results.append({
-                'image_url': f"{meta.file.url}#page={element['index']}",
-                'title': f"{meta.name} - Page No: {element['index']}",
+                'image_url': f"{meta.file.url}#page={element[1]}",
+                'title': f"{meta.name} - Page No: {element[1]}",
                 'description': meta.description,
                 'read_more_url': meta.file.url,
             })
