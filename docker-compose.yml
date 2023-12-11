@@ -81,15 +81,24 @@ services:
       - "4000:4000"
     volumes:
       - ./vector:/usr/src/app
-      - pip-cache:/root/.cache/pip
-      - hf-models:/root/.cache/huggingface
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/pip-cache:/root/.cache/pip
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/hf-models:/root/.cache/huggingface
     depends_on:
       - "milvus"
     restart: unless-stopped
 
-volumes:
-  pip-cache:
-  hf-models:
+  db:
+    container_name: postgres
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/postgres:/var/lib/postgresql/data
 
 networks:
   default:
