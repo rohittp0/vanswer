@@ -25,8 +25,12 @@ class MetaData(models.Model):
     def save(
             self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        self.description_vector = SearchVector('description')
         super().save(force_insert, force_update, using, update_fields)
+
+        if update_fields is None or "description" in update_fields:
+            MetaData.objects.filter(pk=self.pk).update(description_vector=SearchVector("description"))
 
     def __str__(self):
         return self.name
+
+
