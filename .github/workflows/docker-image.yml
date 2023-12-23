@@ -36,4 +36,6 @@ jobs:
           context: ${{ matrix.folder }}
           file: ${{ matrix.folder }}/Dockerfile
           push: true
-          tags: ${{ matrix.image }}:${{ github.sha }}
+          tags: |
+            ${{ matrix.image }}:${{ github.sha }}
+            ${{ matrix.image }}:latest
