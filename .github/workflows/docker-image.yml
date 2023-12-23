@@ -17,9 +17,9 @@ jobs:
       matrix:
         include:
           - image: rohittp0/vanswer-server
-            dockerfile: server/Dockerfile
+            folder: server
           - image: rohittp0/vanswer-vector
-            dockerfile: vector/Dockerfile
+            folder: vector
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -33,7 +33,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: ${{ matrix.dockerfile }}
+          context: ${{ matrix.folder }}
+          file: ${{ matrix.folder }}/Dockerfile
           push: true
           tags: ${{ matrix.image }}:${{ github.sha }}
