@@ -73,7 +73,7 @@ services:
 
   fastapi-app:
     container_name: fastapi-app
-    build: vector
+    image: rohittp0/vanswer-vector
     environment:
       MILVUS_HOST: "milvus"
       MILVUS_PORT: "19530"
@@ -102,7 +102,7 @@ services:
 
   server:
     container_name: server
-    build: server
+    image: rohittp0/vanswer-server
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
