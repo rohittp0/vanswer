@@ -4,7 +4,7 @@ from io import BytesIO
 
 from pymilvus import Collection
 
-from db import store_in_milvus, MetaData
+from db import store_in_milvus, MetaData, get_or_create_embeddings_collection, get_or_create_meta_data_collection
 from operations import elements_to_embeddings, process_pdf, texts_to_embeddings
 from store import EMBEDDINGS_COLLECTION, META_DATA_COLLECTION
 
@@ -56,6 +56,8 @@ async def upload_pdf(meta: MetaData, file: UploadFile = File(...)):
 
 @app.get("/search/elements/")
 async def search_elements(query: str, limit: int = 10, expr: str = None):
+    get_or_create_embeddings_collection()
+
     return search(
         collection=EMBEDDINGS_COLLECTION,
         query=query,
@@ -69,6 +71,8 @@ async def search_elements(query: str, limit: int = 10, expr: str = None):
 
 @app.get("/search/meta/")
 async def search_meta(query: str, limit: int = 10, expr: str = None):
+    get_or_create_meta_data_collection()
+
     return search(
         collection=META_DATA_COLLECTION,
         query=query,
@@ -78,6 +82,11 @@ async def search_meta(query: str, limit: int = 10, expr: str = None):
         search_filed="description",
         iterables=["tags", "states"],
     )
+
+
+@app.get("/health/")
+async def health():
+    return {"status": "ok"}
 
 
 if __name__ == "__main__":

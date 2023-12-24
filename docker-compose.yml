@@ -99,15 +99,26 @@ services:
       - "5432:5432"
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   server:
     container_name: server
     image: rohittp0/vanswer-server
     environment:
+      POSTGRES_HOST: "db"
+      POSTGRES_PORT: "5432"
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      VECTOR_API_URL: "http://fastapi-app:4000"
       DJANGO_KEY: ${DJANGO_KEY}
+      DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD}
+      DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME}
+      DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL}
       DEBUG: ${DEBUG}
       HOST: ${HOST}
     ports:
@@ -117,8 +128,10 @@ services:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/pip-cache:/root/.cache/pip
       - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/hf-models:/root/.cache/huggingface
     depends_on:
-      - "fastapi-app"
-      - "db"
+      fastapi-app:
+        condition: service_started
+      db:
+        condition: service_healthy
     restart: unless-stopped
 
 networks:
