@@ -20,7 +20,7 @@ class UrlDataInline(admin.StackedInline):
 
 @admin.register(MetaData)
 class MetaDataAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category')
+    list_display = ('title', 'category', 'status')
     search_fields = ('title', 'description', 'keywords')
     readonly_fields = ('status', 'verified_by', 'verified')
     list_per_page = 25
@@ -30,8 +30,10 @@ class MetaDataAdmin(admin.ModelAdmin):
 
     @admin.action(description="Mark selected records as approved")
     def mark_as_approved(self, request, queryset):
-        queryset.update(status="processing", verified=True, verified_by=request.user)
+        for meta in queryset:
+            meta.verify(request.user)
 
     @admin.action(description="Mark selected records as rejected")
     def mark_as_rejected(self, request, queryset):
-        queryset.update(status="rejected", verified=False, verified_by=request.user)
+        for meta in queryset:
+            meta.verify(request.user, False)

@@ -1,9 +1,19 @@
+import json
+import logging
+
+import requests
+from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from home.constants import language_choices, category_choices, file_types, state_choices, url_types
+
+
+logger = logging.getLogger("home.models")
 
 
 class MetaData(models.Model):
@@ -35,10 +45,13 @@ class MetaData(models.Model):
         if update_fields is None or "description" in update_fields:
             MetaData.objects.filter(pk=self.pk).update(description_vector=SearchVector("description"))
 
-    def verify(self, user):
-        self.verified = True
+    def verify(self, user, status=True):
+        # if self.status == "processing" and status:
+        #     return
+
+        self.verified = status
         self.verified_by = user
-        self.status = "processing"
+        self.status = "approved" if status else "rejected"
         self.save()
 
     def __str__(self):
@@ -46,7 +59,7 @@ class MetaData(models.Model):
 
 
 class FileData(models.Model):
-    file = models.ForeignKey(MetaData, on_delete=models.CASCADE)
+    file = models.FileField(upload_to="")
     type = models.CharField(max_length=10, choices=file_types)
     meta_data = models.ForeignKey(MetaData, on_delete=models.CASCADE, related_name="file_data")
 
@@ -69,3 +82,53 @@ class UrlData(models.Model):
 
     def __str__(self):
         return f"{self.meta_data.title}"
+
+
+@receiver(post_save, sender=MetaData)
+def update_file_data(sender, instance: MetaData, created, **__):
+    if created:
+        return
+
+    if instance.status != "approved":
+        return
+
+    instance.status = "processing"
+    instance.save()
+
+    url = f"{settings.VECTOR_API_URL}/upload/"
+
+    # Serialize the MetaData object to JSON
+    meta_json = {
+        "name": instance.title,
+        "language": instance.language,
+        "type": instance.category,
+        "tags": instance.tags,
+        "states": instance.states,
+        "description": instance.description,
+        "organization": instance.organization
+    }
+
+    # Open the file in binary mode
+    with open(instance.file_data.first().file.path, 'rb') as f:
+        files = {
+            'file': (instance.file_data.first().file.name, f, 'application/octet-stream'),
+            'meta': (None, json.dumps(meta_json), 'application/json'),
+        }
+        response = requests.post(url, files=files)
+
+    if response.status_code != 200:
+        logger.error(f"Vector API error status code {response.status_code} - {response.text}")
+        instance.status = "failed"
+        return instance.save()
+
+    # Get the response as JSON
+    response_json = response.json()
+
+    if response_json["status"] == "success":
+        instance.meta_id = response_json["id"]
+        instance.status = "processed"
+    else:
+        logger.error(f"Error processing file: {response_json['error']}")
+        instance.status = "failed"
+
+    instance.save()

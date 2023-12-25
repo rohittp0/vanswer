@@ -1,4 +1,7 @@
-from fastapi import FastAPI, UploadFile, File
+import json
+from typing import Annotated
+
+from fastapi import FastAPI, Form, File
 import uvicorn
 from io import BytesIO
 
@@ -44,14 +47,18 @@ def search(collection, query, limit, expr, output_fields, search_filed, iterable
 
 
 @app.post("/upload/")
-async def upload_pdf(meta: MetaData, file: UploadFile = File(...)):
-    pdf_file = BytesIO(await file.read())
-    pdf_elements = process_pdf(pdf_file)
-    embeddings = elements_to_embeddings(pdf_elements)
+async def upload_pdf(file: Annotated[bytes, File()], meta: Annotated[str, Form()]):
+    try:
+        pdf_elements = process_pdf(BytesIO(file))
+        embeddings = elements_to_embeddings(pdf_elements)
 
-    key = store_in_milvus(embeddings, meta)
+        meta = MetaData(**json.loads(meta))
 
-    return {"key": key}
+        key = store_in_milvus(embeddings, meta)
+        return {"key": key, "status": "success"}
+
+    except Exception as e:
+        return {"error": str(e), "status": "failed"}
 
 
 @app.get("/search/elements/")
@@ -90,4 +97,4 @@ async def health():
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", port=8080, reload=True)
+    uvicorn.run("main:app", host="localhost", port=4000, reload=True)

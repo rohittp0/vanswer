@@ -45,16 +45,10 @@ def search(request):
     for meta in metas:
         for element in filter(lambda x: x[0] == meta.meta_id, api_result):
             results.append({
-                'image_url': f"{meta.file.url}#page={element[1] + 1}",
-                'title': f"{meta.name} - Page No: {element[1] + 1}",
+                'image_url': f"{meta.file_data.file.url}#page={element[1] + 1}",
+                'title': f"{meta.title} - Page No: {element[1] + 1}",
                 'description': meta.description,
-                'read_more_url': f"{meta.file.url}#page={element[1] + 1}",
+                'read_more_url': f"{meta.file_data.file.url}#page={element[1] + 1}",
             })
 
     return render(request, 'home/search.html', {'query': query_text, 'results': results})
-
-
-def update_task(request):
-    task_id = request.GET.get('task_id')
-
-    return render(request, 'home/update_task.html')
