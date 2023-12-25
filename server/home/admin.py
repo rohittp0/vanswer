@@ -1,12 +1,37 @@
 from django.contrib import admin
 
-from home.models import MetaData
+from home.models import MetaData, UrlData, FileData
 
 
 # Register your models here.
+class FileDataInline(admin.StackedInline):
+    model = FileData
+    fk_name = 'meta_data'
+    extra = 0
+    max_num = 1
+
+
+class UrlDataInline(admin.StackedInline):
+    model = UrlData
+    fk_name = 'meta_data'
+    extra = 0
+    max_num = 0
+
+
 @admin.register(MetaData)
 class MetaDataAdmin(admin.ModelAdmin):
-    list_display = ('title', 'type', 'organization')
+    list_display = ('title', 'category')
     search_fields = ('title', 'description', 'keywords')
     readonly_fields = ('status', 'verified_by', 'verified')
     list_per_page = 25
+
+    inlines = [FileDataInline, UrlDataInline]
+    actions = ["mark_as_approved", "mark_as_rejected"]
+
+    @admin.action(description="Mark selected records as approved")
+    def mark_as_approved(self, request, queryset):
+        queryset.update(status="processing", verified=True, verified_by=request.user)
+
+    @admin.action(description="Mark selected records as rejected")
+    def mark_as_rejected(self, request, queryset):
+        queryset.update(status="rejected", verified=False, verified_by=request.user)

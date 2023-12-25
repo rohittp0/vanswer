@@ -1,6 +1,6 @@
 import requests
 from django.conf import settings
-from django.contrib.postgres.search import SearchQuery, SearchVector
+from django.contrib.postgres.search import SearchQuery
 from django.db.models import Q
 from django.shortcuts import render
 
@@ -52,3 +52,9 @@ def search(request):
             })
 
     return render(request, 'home/search.html', {'query': query_text, 'results': results})
+
+
+def update_task(request):
+    task_id = request.GET.get('task_id')
+
+    return render(request, 'home/update_task.html')

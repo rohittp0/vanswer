@@ -15,7 +15,7 @@ language_choices = (
 )
 
 
-type_choices = (
+category_choices = (
     ("report", "Report"),
     ("case_study", "Case Study"),
     ("interview", "Interview"),
@@ -27,15 +27,16 @@ type_choices = (
     ("other", "Other"),
 )
 
-format_choices = (
+file_types = (
     ("pdf", "PDF"),
     ("doc", "DOC"),
     ("ppt", "PPT"),
     ("txt", "TXT"),
     ("img", "IMG"),
-    ("video", "Video"),
-    ("audio", "Audio"),
-    ("other", "Other"),
+)
+
+url_types = (
+    ("youtube", "Youtube"),
 )
 
 state_choices = (
