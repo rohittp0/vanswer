@@ -18,7 +18,7 @@ logger = logging.getLogger("home.models")
 
 class MetaData(models.Model):
     title = models.CharField(max_length=256, default="")
-    language = models.CharField(max_length=3, choices=language_choices, default="other")
+    language = models.CharField(max_length=3, choices=language_choices, default="otr")
     category = models.CharField(max_length=20, choices=category_choices, default="other")
     tags = ArrayField(models.CharField(max_length=64), size=50)
     states = ArrayField(models.CharField(max_length=10, choices=state_choices), size=32)
@@ -46,8 +46,8 @@ class MetaData(models.Model):
             MetaData.objects.filter(pk=self.pk).update(description_vector=SearchVector("description"))
 
     def verify(self, user, status=True):
-        # if self.status == "processing" and status:
-        #     return
+        if self.status == "processing" and status:
+            return
 
         self.verified = status
         self.verified_by = user
@@ -114,7 +114,12 @@ def update_file_data(sender, instance: MetaData, created, **__):
             'file': (instance.file_data.first().file.name, f, 'application/octet-stream'),
             'meta': (None, json.dumps(meta_json), 'application/json'),
         }
-        response = requests.post(url, files=files)
+        try:
+            response = requests.post(url, files=files)
+        except requests.exceptions.ConnectionError:
+            logger.error(f"Vector API connection error")
+            instance.status = "failed"
+            return instance.save()
 
     if response.status_code != 200:
         logger.error(f"Vector API error status code {response.status_code} - {response.text}")
@@ -125,7 +130,7 @@ def update_file_data(sender, instance: MetaData, created, **__):
     response_json = response.json()
 
     if response_json["status"] == "success":
-        instance.meta_id = response_json["id"]
+        instance.meta_id = response_json["key"]
         instance.status = "processed"
     else:
         logger.error(f"Error processing file: {response_json['error']}")

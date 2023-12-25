@@ -53,6 +53,7 @@ async def upload_pdf(file: Annotated[bytes, File()], meta: Annotated[str, Form()
         embeddings = elements_to_embeddings(pdf_elements)
 
         meta = MetaData(**json.loads(meta))
+        meta.description = texts_to_embeddings([meta.description])[0]
 
         key = store_in_milvus(embeddings, meta)
         return {"key": key, "status": "success"}
