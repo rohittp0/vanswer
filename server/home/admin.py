@@ -28,6 +28,12 @@ class MetaDataAdmin(admin.ModelAdmin):
     inlines = [FileDataInline, UrlDataInline]
     actions = ["mark_as_approved", "mark_as_rejected"]
 
+    def get_actions(self, request):
+        if not request.user.is_superuser:
+            return []
+
+        return super().get_actions(request)
+
     @admin.action(description="Mark selected records as approved")
     def mark_as_approved(self, request, queryset):
         for meta in queryset:
