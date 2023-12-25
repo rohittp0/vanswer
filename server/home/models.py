@@ -11,7 +11,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from home.constants import language_choices, category_choices, file_types, state_choices, url_types
-
+from vanswer.utils import ChoiceArrayField
 
 logger = logging.getLogger("home.models")
 
@@ -21,7 +21,7 @@ class MetaData(models.Model):
     language = models.CharField(max_length=3, choices=language_choices, default="otr")
     category = models.CharField(max_length=20, choices=category_choices, default="other")
     tags = ArrayField(models.CharField(max_length=64), size=50)
-    states = ArrayField(models.CharField(max_length=10, choices=state_choices), size=32)
+    states = ChoiceArrayField(models.CharField(max_length=10, choices=state_choices), size=32)
     description = models.TextField()
     organization = models.CharField(max_length=256, default="")
     meta_id = models.BigIntegerField(default=0, editable=False)
