@@ -1,0 +1,161 @@
+.navbar {
+    padding: 0;
+    margin: 0;
+    position: relative;
+    z-index: 1000; 
+    background-color: rgba(0, 0, 0, 0.534);
+}
+
+.navimage {
+    max-width: 100%;
+    height: auto;
+    display: block; 
+    margin: 0 auto;
+}
+
+.search {
+    height: 2.5rem;
+    position: absolute;
+    bottom: 15px;
+    right: 70px;
+}
+
+@media (min-width:767px){
+    .mini-search{
+        display: none;
+    }
+}
+
+
+.search input{
+    object-fit: cover;
+    width: 230px;
+    /* margin: 0; */
+}
+
+
+.search button{
+    color:white;
+    background-color: black;
+    border: 0;
+    height: 38px;
+    width: 30px;
+    border-radius: 0;
+}
+
+
+.form {
+    /* border-color: rgba(0, 0, 0, 0.511); */
+    border-color: black;
+    border-style: inset;
+    border-width: 1px;
+    height: 38px;
+    padding-left: 10px;
+}
+
+.search-input{
+    width: 230px;
+}
+
+.select{
+    border-color: rgba(0, 0, 0, 0.331);
+    border-style: inset;
+    border-width: 1px;
+    height: 38px;
+    padding: 0 10px;
+}
+
+.nav-item{
+    padding-left: 20px;
+}
+.contents {
+    background-color: rgb(49, 210, 210);
+    position: relative;
+    margin-bottom: 60px;
+}
+
+.wrapcontent{
+    margin-top: -60px;
+    position: absolute;
+    right: 70px;
+}
+
+.donate{
+    background-color: green;
+    padding: 6px; 
+    color: white;
+}
+
+@media (max-width:767px){
+    .navimage{
+        width: 55%;
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+
+    .nav-item{
+        padding-left: 0;
+    }
+
+    .search{
+        display: none;
+    }
+
+    .mini-search{
+        position: relative;
+        top: 3%;
+        right: 3%;
+    }
+
+    .select{
+        width: 50px;
+        height: 25px;
+    }
+
+    .form{
+        width: 130px;
+        height: 25px;
+    }
+    
+
+    .navbar-toggler-icon{
+        position: absolute;
+        right: 10px;
+        top:15px
+    }
+
+    .select{
+        width: 100px;
+    }
+
+    .select option{
+        font-size: 20px;
+    }
+
+    .donate{
+        background-color: transparent;
+        color: black;
+    }
+
+    .nav-item{
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav-item a{
+        padding: 0;
+        margin: 0;
+    }
+
+    .navbar-nav{
+        margin-top: 10px;
+        padding: 10px;
+        font-weight: 600;
+        color: black;
+    }
+
+    .wrapcontent{
+        background-color: white;
+        z-index: 20;
+    }
+}

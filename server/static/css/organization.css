@@ -1,0 +1,70 @@
+#organization {
+    padding: 10px;
+    letter-spacing: 1px;
+    font-size: 20px;
+    font-weight: 400;
+ }
+#org-tittle{
+    padding: 10px 10px;
+    letter-spacing: 1px;
+    text-transform:uppercase;
+}
+
+.card-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:left;
+}
+
+@media(max-width: 767px){
+    .card-container{
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        
+    }
+
+    #org-tittle{
+        font-size: 8px;
+    }
+}
+
+.card{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+
+}
+
+
+
+.organization{
+    text-align: center;
+}
+
+.image-prod img {
+    max-width: 100%;
+    height: auto;
+}
+
+#back-to-top{
+    background-color: rgba(23, 23, 190, 0.856);
+    color: white;
+    border-color: transparent;
+    border-radius: 3px;
+    position: relative;
+    left: 90%;
+    height: 40px;
+
+    
+}
+
+#back-to-top a{
+    color: white;
+    text-decoration: none;
+    border: none;
+    align-items: center;
+    padding: 10px;
+    
+}

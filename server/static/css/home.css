@@ -1,0 +1,79 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+}
+
+
+.carousel-item {
+    max-height: 350px;
+    width: 100% ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover; 
+}
+
+
+
+.carousel-caption{
+    background-color: rgba(14, 14, 13, 0.429);
+    /* padding: 50px; */
+    padding: 10px;
+    padding-top: 0;
+    padding-bottom: 0;
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    bottom: 0px;
+    width: fit-content;  
+}
+
+.carousel-caption h3{
+    color: white;
+    text-transform: capitalize;
+    font-weight: bold;
+    width: fit-content;    
+
+}
+
+.carousel-caption p{
+    letter-spacing: 2px;
+    font-size: 20px;
+}
+
+@media (max-width: 767px){
+    .carousel-item img {
+        height: 200px; 
+        
+    }
+
+    .carousel-caption{
+        right: 5px;
+        bottom: 10px;
+        top: 100px;
+        width: fit-content;
+        height: 50px; 
+        padding-bottom: 5px;
+    }
+
+    .carousel-caption h3{
+        font-size: 6px; 
+        padding-top: 0;  
+    
+    }
+
+    .carousel-caption p{
+        letter-spacing: 1px;
+        font-size: 5px;
+        padding-bottom: 5px;
+    }
+}
