@@ -52,3 +52,25 @@ def search(request):
             })
 
     return render(request, 'home/search.html', {'query': query_text, 'results': results})
+
+
+# =================================================================================================
+
+
+def home(request):
+    return render(request, 'home/home.html')
+
+def navbar(request):
+    return render(request, 'navbar1.html')
+
+def organization(request):
+    details = MetaData.objects.all()
+    return render(request, 'home/organization.html',{'details':details})
+
+def searchresult(request):
+    messages = [1,2,3,5,7]
+    context = {
+        "messages": messages,
+        "filter":filter,
+    }
+    return render(request, 'home/searchresult.html', context)
