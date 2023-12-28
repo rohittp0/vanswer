@@ -12,5 +12,5 @@ else
   # Create superuser
   python3 manage.py createsuperuser --noinput
 
-  gunicorn server.wsgi:application --bind 0.0.0.0:8000
+  gunicorn vanswer.wsgi:application --bind 0.0.0.0:8000
 fi
