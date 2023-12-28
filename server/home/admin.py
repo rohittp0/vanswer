@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from home.models import MetaData, UrlData, FileData
+from home.models import MetaData, UrlData, FileData, Organization
 
 
 # Register your models here.
@@ -23,7 +23,7 @@ class MetaDataAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'status')
     search_fields = ('title', 'description', 'keywords')
     readonly_fields = ('status', 'verified_by', 'verified')
-    list_per_page = 25
+    list_per_page = 50
 
     inlines = [FileDataInline, UrlDataInline]
     actions = ["mark_as_approved", "mark_as_rejected"]
@@ -34,12 +34,19 @@ class MetaDataAdmin(admin.ModelAdmin):
 
         return super().get_actions(request)
 
-    @admin.action(description="Mark selected records as approved")
+    @admin.action(description="Approve")
     def mark_as_approved(self, request, queryset):
         for meta in queryset:
             meta.verify(request.user)
 
-    @admin.action(description="Mark selected records as rejected")
+    @admin.action(description="Reject")
     def mark_as_rejected(self, request, queryset):
         for meta in queryset:
             meta.verify(request.user, False)
+
+
+@admin.register(Organization)
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    search_fields = ('name', )
+    list_per_page = 25

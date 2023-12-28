@@ -3,17 +3,26 @@ import logging
 
 import requests
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
 from home.constants import language_choices, category_choices, file_types, state_choices, url_types
 from vanswer.utils import ChoiceArrayField
 
 logger = logging.getLogger("home.models")
+
+
+class Organization(models.Model):
+    name = models.CharField(max_length=256)
+    description = models.TextField()
+    website = models.URLField()
+
+    def __str__(self):
+        return self.name
 
 
 class MetaData(models.Model):
@@ -23,13 +32,16 @@ class MetaData(models.Model):
     tags = ArrayField(models.CharField(max_length=64), size=50)
     states = ChoiceArrayField(models.CharField(max_length=10, choices=state_choices), size=32)
     description = models.TextField()
-    organization = models.CharField(max_length=256, default="")
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="records")
     meta_id = models.BigIntegerField(default=0, editable=False)
+    date = models.DateField(default="2000-01-01")
+    contributor = models.ForeignKey("auth.User", on_delete=models.SET_NULL, null=True, related_name="contributions")
 
     description_vector = SearchVectorField(null=True, editable=False)
 
     verified = models.BooleanField(default=False)
-    verified_by = models.ForeignKey("auth.User", on_delete=models.SET_NULL, null=True, blank=True)
+    verified_by = models.ForeignKey("auth.User", on_delete=models.SET_NULL, null=True, blank=True,
+                                    related_name="verifications")
     status = models.CharField(max_length=15, default="pending")
 
     class Meta:
