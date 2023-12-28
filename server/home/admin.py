@@ -34,6 +34,12 @@ class MetaDataAdmin(admin.ModelAdmin):
 
         return super().get_actions(request)
 
+    def get_queryset(self, request):
+        if request.user.is_superuser:
+            return super().get_queryset(request)
+
+        return super().get_queryset(request).filter(contributor=request.user)
+
     @admin.action(description="Approve")
     def mark_as_approved(self, request, queryset):
         for meta in queryset:
