@@ -6,29 +6,19 @@
 {% endblock head %}
 
 {% block content %}
-{% comment %} <span id="organization">Organizations</span> {% endcomment %}
 <h3 id="org-tittle">Explore by organizations</h3>
 
 <div class='card-container'>
 {% for value in details %}
 <div class="card col-sm col-md-6 col-lg-3 ftco-animate">
     <div class="organization">
-        <a href="#" class="img-prod"><img class="img-fluid" src="{{ value.file.url }}" alt="natural farming"></a>
+        <a href="#" class="img-prod"><img class="img-fluid" src="{{ value.file.url }}" alt="{{ value.organization }}"></a>
     </div> 
 </div>
 <hr>
 {% endfor %}
 </div>
-{% comment %} <button id="back-to-top"><a href="">Back to top <i class="fa-solid fa-angle-up"></i></a></button> {% endcomment %}
-
-
 
 {% endblock content %}
-
-
-
-
-    
-
 
 

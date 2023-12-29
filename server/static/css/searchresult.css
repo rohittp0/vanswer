@@ -11,7 +11,6 @@
 
 .filter {
     display: inline-block;
-    /* background-color: rgb(214, 200, 173); */
     position: relative;
     top: -170px;
   
@@ -52,14 +51,13 @@ font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     position: relative;
 }
 
-.dropdown:hover .dropdown-menu {
+.dropdown.active .dropdown-menu {
     display: block;
-  }
+}
 
   
 .custom-dropdown-toggle{
     background-color: transparent;
-    /* background-color: greenyellow; */
     border: none;
     text-decoration: none;
     padding: 0;
@@ -169,7 +167,6 @@ font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .input-group1{ 
-        /* background-color: yellow; */
         position: relative;
         top: 10px;
         right: 10px;
@@ -179,9 +176,6 @@ font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         align-items: center;
     }
 
-    /* .sort{
-        width: fit-content;
-    } */
 
   
 }

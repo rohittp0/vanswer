@@ -17,229 +17,31 @@
             <hr id="hr">
               
               
-
-              <div class="dropdown">
-                <button class="custom-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <h6>Location</h6><i  class="fas fa-caret-down"></i>
+            {% for field in field_names %}
+            <div class="dropdown">
+                <button class="custom-dropdown-toggle" type="button" data-field="{{ field }}">
+                    <h6>{{ field }}</h6><i class="fas fa-caret-down"></i>
                 </button>
                 <ul class="dropdown-menu">
-                  
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2022-2023</span> 
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2021-2022</span> 
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2020-2021</span> 
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
+                    {% for data in dropdown %}
+                        <li>
+                            <div class="check">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    <span>{{ data }}</span>
+                                </label>
+                                <input class="form-check-input" type="checkbox" value="{{ data }}" id="flexCheckDefault">
+                            </div>
+                        </li>
+                    {% endfor %}
                 </ul>
-              </div>
-
-              <div class="dropdown">
-                <button class="custom-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <h6>Language</h6>  <i class="fas fa-caret-down"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2022-2023</span> <span id="count2">112</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2021-2022</span> <span id="count2">82</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2020-2021</span> <span id="count2">63</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                </ul>
-              </div>
-
-              <div class="dropdown">
-                <button class="custom-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <h6>Sub-themes</h6>  <i  class="fas fa-caret-down"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2022-2023</span> <span id="count2">112</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2021-2022</span> <span id="count2">82</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2020-2021</span> <span id="count2">63</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                </ul>
-              </div>
-
-              <div class="dropdown">
-                <button class="custom-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <h6>Formats</h6>  <i  class="fas fa-caret-down"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2022-2023</span> <span id="count2">112</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2021-2022</span> <span id="count2">82</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2020-2021</span> <span id="count2">63</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                </ul>
-              </div>
-
-              <div class="dropdown">
-                <button class="custom-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <h6>Contributor</h6>  <i  class="fas fa-caret-down"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2022-2023</span> <span id="count2">112</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2021-2022</span> <span id="count2">82</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2020-2021</span> <span id="count2">63</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                </ul>
-              </div>
-
-
-              <div class="dropdown">
-                <button class="custom-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <h6>Other Formats</h6>  <i  class="fas fa-caret-down"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2022-2023</span> <span id="count2">112</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2021-2022</span> <span id="count2">82</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                  <li>
-                    <div class="check">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      <span>2020-2021</span> <span id="count2">63</span>
-                    </label>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  </div>
-                  </li>
-
-                </ul>
-              </div>
+            </div>
+        {% endfor %}
+        
 
         </div> 
         
+        
 
-        {% comment %} <div class="result col-lg-1 col-md-1 col-sm-1 col-12">
-
-        </div> {% endcomment %}
 
 
 
@@ -248,7 +50,7 @@
             <h4>Refined By</h4>
             {% for mes in messages %}
             <div class="alert  alert-dismissible fade show" role="alert">
-                <strong>format: manuals</strong> 
+                <strong>{{mes}}</strong> 
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -328,3 +130,56 @@
     </div>
 
 {%endblock content%}
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
+<script>
+  $(document).ready(function() {
+      $(".custom-dropdown-toggle").on("click", function() {
+          // Toggle the 'active' class on the parent .dropdown element
+          $(this).closest('.dropdown').toggleClass('active');
+      });
+  });
+  </script>
+
+<script>
+$(document).ready(function() {
+    $(".custom-dropdown-toggle").on("click", function() {
+        var field = $(this).data("field");
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'searchresult' %}",
+            data: {
+                field: field
+            },
+            success: function(response) {
+                // Assuming you have a container for the dropdown content
+                updateDropdownContent(response.dropdown_values);
+            },
+            error: function(error) {
+                console.log("Error:", error);
+            }
+        });
+    });
+
+    function updateDropdownContent(dropdownValues) {
+        // Clear previous dropdown content
+        $(".dropdown-menu").empty();
+
+        // Append new dropdown items
+        var dropdownMenu = $(".dropdown-menu");
+        for (var i = 0; i < dropdownValues.length; i++) {
+            var data = dropdownValues[i];
+            var listItem = $('<li><div class="check"><label class="form-check-label" for="flexCheckDefault"><span>' + data + '</span></label><input class="form-check-input" type="checkbox" value="' + data + '" id="flexCheckDefault"></div></li>');
+            dropdownMenu.append(listItem);
+        }
+    }
+});
+</script>
+
+
+
+{% endblock script %}
