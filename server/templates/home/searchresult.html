@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load static %}
+{%block head%}
+<title>searchresult</title>
+<link rel="stylesheet" href="{% static 'css/searchresult.css' %}" />
+
+{%endblock head%}
+{%block content%}
+
+
+    <div class="row flex-column-reverse flex-sm-row">
+        <div class="filter col-lg-2 col-md-2 col-sm-1 col-12">
+            <h3 id="format">Format</h3>
+            <h3 id="manual">Manuals</h3>
+            <h4 id="result">Result: 1-25 of 809</h4>
+            <h4 id="refine">Refine Your Results</h4>
+            <hr id="hr">
+              
+              
+            {% for field in field_names %}
+            <div class="dropdown">
+                <button class="custom-dropdown-toggle" type="button" data-field="{{ field }}">
+                    <h6>{{ field }}</h6><i class="fas fa-caret-down"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    {% for data in dropdown %}
+                        <li>
+                            <div class="check">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    <span>{{ data }}</span>
+                                </label>
+                                <input class="form-check-input" type="checkbox" value="{{ data }}" id="flexCheckDefault">
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+        
+
+        </div> 
+        
+        
+
+
+
+
+        
+        <div class="result col-lg-9 col-md-9 col-sm-10 col-12" >
+            <h4>Refined By</h4>
+            {% for mes in messages %}
+            <div class="alert  alert-dismissible fade show" role="alert">
+                <strong>{{mes}}</strong> 
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            <div class="tittle">
+              <h2>search manuals</h2>
+              <div class="sort col-lg-5 col-md-4 col-sm-7 col-12" >
+                <form method="GET" >
+                  <div class="input-group1 ">
+                    <h6>View</h6>
+                      <div class="input-group-prepend">
+                        
+                          <select class="view" name="search_type" >
+                              <option value="meta" selected>view1</option>
+                              <option value="elements">view2</option>
+                          </select>
+                      </div>
+                      <h6>Sort by</h6>
+                      <div class="input-group-prepend">
+                        
+                        <select class="sort-by" name="search_type">
+                            <option value="meta" selected>select1</option>
+                            <option value="elements">select2</option>
+                        </select>
+                      </div>
+                      <div class="input-group-append">
+                          <button class="submit-go" type="submit">Go</button>
+                      </div>
+                  </div>
+              </form>
+              </div>
+            </div>            
+            <hr>
+            <div class="card mb-3 border-0" >
+                <div class="row g-0">
+                  <div class="col-md-3">
+                    <img id="image"  src="{%static 'images/search1.jpg'%}" class="img-fluid" alt="search_image">
+                  </div>
+                  
+                  <div class="col-md-8" >
+                    <div class="card-body">
+                      <h5 class="card-title">manual</h5>
+                      <p class="content">how do i set up a BRC</p>
+                      <p>Contributor : <span>pradan</span></p>
+                      <p>Date: 2022</p>
+                      <p>Resource: <a href="#">View</a> | <a href="#">Download</a></p>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+
+              
+            <div class="card mb-3 border-0" >
+                <div class="row g-0">
+                  <div class="col-md-3">
+                    <img  src="{%static 'images/search2.jpg'%}" class="img-fluid card_img" alt="search_image" >
+                  </div>
+                  
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">manual</h5>
+                      <p class="content">Natural Farming: A Guide</p>  
+                      <p>Contributor : <span>parambha</span></p>
+                      <p>Date: 2022</p>
+                      <p>Resource: <a href="#">View</a> | <a href="#">Download</a></p>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+        </div>
+        
+    </div>
+
+{%endblock content%}
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
+<script>
+  $(document).ready(function() {
+      $(".custom-dropdown-toggle").on("click", function() {
+          // Toggle the 'active' class on the parent .dropdown element
+          $(this).closest('.dropdown').toggleClass('active');
+      });
+  });
+  </script>
+
+<script>
+$(document).ready(function() {
+    $(".custom-dropdown-toggle").on("click", function() {
+        var field = $(this).data("field");
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'searchresult' %}",
+            data: {
+                field: field
+            },
+            success: function(response) {
+                // Assuming you have a container for the dropdown content
+                updateDropdownContent(response.dropdown_values);
+            },
+            error: function(error) {
+                console.log("Error:", error);
+            }
+        });
+    });
+
+    function updateDropdownContent(dropdownValues) {
+        // Clear previous dropdown content
+        $(".dropdown-menu").empty();
+
+        // Append new dropdown items
+        var dropdownMenu = $(".dropdown-menu");
+        for (var i = 0; i < dropdownValues.length; i++) {
+            var data = dropdownValues[i];
+            var listItem = $('<li><div class="check"><label class="form-check-label" for="flexCheckDefault"><span>' + data + '</span></label><input class="form-check-input" type="checkbox" value="' + data + '" id="flexCheckDefault"></div></li>');
+            dropdownMenu.append(listItem);
+        }
+    }
+});
+</script>
+
+
+
+{% endblock script %}

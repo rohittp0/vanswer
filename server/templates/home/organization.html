@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static "css/organization.css" %}">
+{% endblock head %}
+
+{% block content %}
+<h3 id="org-tittle">Explore by organizations</h3>
+
+<div class='card-container'>
+{% for value in details %}
+<div class="card col-sm col-md-6 col-lg-3 ftco-animate">
+    <div class="organization">
+        <a href="#" class="img-prod"><img class="img-fluid" src="{{ value.file.url }}" alt="{{ value.organization }}"></a>
+    </div> 
+</div>
+<hr>
+{% endfor %}
+</div>
+
+{% endblock content %}
+
+

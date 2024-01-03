@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.shortcuts import render
 
 from home.models import MetaData
+from django.http import JsonResponse
 
 collection_name = "main"
 
@@ -53,3 +54,50 @@ def search(request):
             })
 
     return render(request, 'home/search.html', {'query': query_text, 'results': results})
+
+
+# =================================================================================================
+
+
+def home(request):
+    return render(request, 'home/home.html')
+
+
+def organization(request):
+    details = MetaData.objects.all()
+    return render(request, 'home/organization.html',{'details':details})
+
+
+def searchresult(request):
+    dropdown_values = []
+    dropdown_values_unique = ""
+
+    field = request.GET.get('field')
+    data = request.GET.get('data')
+    print(field, "fieldddddddd")
+    print(data,"ddddddddddddddddata")
+
+    if field:
+        dropdown_values = MetaData.objects.filter(**{f"{field}__isnull": False}).values_list(field, flat=True)
+        dropdown_values_lower = []
+
+        for value in dropdown_values:
+            if isinstance(value, list):
+                dropdown_values_lower.extend([item.lower() for item in value])
+            else:
+                dropdown_values_lower.append(value.lower())
+
+        dropdown_values_unique = set(dropdown_values_lower)
+        print(dropdown_values_unique, "unique valueeeeeeeeees")
+
+        return JsonResponse({"dropdown_values": list(dropdown_values_unique)})
+
+    field_names = ["language", "states"]    
+    messages = ['language:malayalam', 'state:kerala', 'organization: pradan']
+    context = {
+        "messages": messages,
+        "field_names": field_names,
+        "dropdown": dropdown_values_unique,
+    }
+
+    return render(request, 'home/searchresult.html', context)

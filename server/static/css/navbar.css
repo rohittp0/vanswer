@@ -1,0 +1,181 @@
+.navbar {
+    padding: 0;
+    margin: 0;
+    position: relative;
+    z-index: 1000; 
+    background-color: rgba(0, 0, 0, 0.534);
+}
+
+.navimage {
+    max-width: 100%;
+    height: auto;
+    display: block; 
+    margin: 0 auto;
+}
+
+.search {
+    height: 2.5rem;
+    position: absolute;
+    bottom: 15%;
+    right: 4.5%;   
+    
+}
+
+
+
+.search input{
+    
+    object-fit: cover;
+    width: 230px;
+}
+
+.input-group ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.input-group ul li{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.search button{
+    color:white;
+    background-color: black;
+    border: 0;
+    height: 38px;
+    width: 30px;
+    border-radius: 0;
+}
+
+
+.form {
+    border-color: black;
+    border-style: inset;
+    border-width: 1px;
+    height: 38px;
+}
+
+
+.select{
+    border-color: rgba(0, 0, 0, 0.331);
+    border-style: inset;
+    border-width: 1px;
+    height: 38px;
+    padding: 0 10px;
+}
+
+.nav-item{
+    padding-left: 20px;
+}
+.contents {
+    background-color: rgb(49, 210, 210);
+    position: relative;
+    margin-bottom: 60px;
+}
+
+.navbar-nav{
+    margin-top: -60px;
+    position: absolute;
+    right: 70px;
+}
+
+.donate{
+    background-color: green;
+    padding: 6px; 
+    color: white;
+}
+
+@media (max-width:767px){
+    .navbar{
+        height: 70px;
+    }
+    .navimage{
+        width: 50%;
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+
+    .nav-item{
+        padding-left: 0;
+    }
+
+    .search {
+        height: 2.5rem;
+        position: absolute;
+        bottom: -13%;
+        right: 3%;   
+        
+    }
+
+    .input-group{
+        font-size: 10px;
+    }
+
+    .search input{
+    
+        object-fit: cover;
+        width: 80px;
+        
+    }
+
+    .search button{
+        height: 15px;
+        width: 15px;
+    }
+
+    .select{
+        width: 70px;
+        height: 15px;
+    }
+
+    .form{
+        width: 130px;
+        height: 15px;
+        
+    }
+
+    .navbar-toggler-icon{
+        position: absolute;
+        right: 10px;
+        top:15px
+    }
+
+
+    .select option{
+        font-size: 20px;
+    }
+
+    .donate{
+        width: fit-content;
+        padding:px;
+        margin: 0px;
+    }
+
+    .nav-item{
+        padding: 0px 5px;
+        margin: 0;
+    }
+
+    .nav-item a{
+        padding: 5px 3px;
+        margin: 0;
+        color: black;
+    }
+
+    .navbar-nav{
+        position: absolute;
+        top: 100%;
+        right: 0%;
+        /* padding: 10px; */
+        font-weight: 600;
+        font-size: 10px;
+        color: black;
+        flex-direction: row;
+    }
+
+
+}
