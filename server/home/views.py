@@ -4,7 +4,7 @@ from django.contrib.postgres.search import SearchQuery
 from django.db.models import Q
 from django.shortcuts import render
 
-from home.models import MetaData
+from home.models import MetaData, Organization
 from django.http import JsonResponse
 
 collection_name = "main"
@@ -64,7 +64,7 @@ def home(request):
 
 
 def organization(request):
-    details = MetaData.objects.all()
+    details = Organization.objects.all()
     return render(request, 'home/organization.html',{'details':details})
 
 

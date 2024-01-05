@@ -1,181 +1,82 @@
 .navbar {
-    padding: 0;
-    margin: 0;
-    position: relative;
-    z-index: 1000; 
-    background-color: rgba(0, 0, 0, 0.534);
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    padding:  2rem;
+    padding-bottom: 1rem;
 }
 
-.navimage {
-    max-width: 100%;
-    height: auto;
-    display: block; 
-    margin: 0 auto;
+.navbar a {
+    color: black;
+    text-decoration: none;
+}
+
+.navbar-top {
+    display: flex;
+    padding: 0.5rem 1rem;
+    align-items: center;
+    gap: 1rem;
+    padding-left: 0;
+}
+
+.navbar-right {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+
+}
+
+.donate {
+    background-color: #033503;
+    padding: 0.5rem 1rem;
+    color: white !important;
+    border: none;
 }
 
 .search {
-    height: 2.5rem;
-    position: absolute;
-    bottom: 15%;
-    right: 4.5%;   
-    
-}
-
-
-
-.search input{
-    
-    object-fit: cover;
-    width: 230px;
-}
-
-.input-group ul{
-    list-style: none;
-    padding: 0;
-    margin: 0;
     display: flex;
+    align-items: stretch;
 }
 
-.input-group ul li{
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-}
-
-.search button{
-    color:white;
-    background-color: black;
-    border: 0;
-    height: 38px;
-    width: 30px;
+.search select {
+    border: black 2px solid;
+    height: 100%;
     border-radius: 0;
 }
 
+.search input {
+    height: 100%;
+    border: black 2px solid;
+    padding: 0.5rem 1rem;
+    width: 8rem;
 
-.form {
-    border-color: black;
-    border-style: inset;
-    border-width: 1px;
-    height: 38px;
 }
 
 
-.select{
-    border-color: rgba(0, 0, 0, 0.331);
-    border-style: inset;
-    border-width: 1px;
-    height: 38px;
-    padding: 0 10px;
-}
-
-.nav-item{
-    padding-left: 20px;
-}
-.contents {
-    background-color: rgb(49, 210, 210);
-    position: relative;
-    margin-bottom: 60px;
-}
-
-.navbar-nav{
-    margin-top: -60px;
-    position: absolute;
-    right: 70px;
-}
-
-.donate{
-    background-color: green;
-    padding: 6px; 
+.search button {
+    background-color: black;
     color: white;
+    padding: 0.5rem 1rem;
+    height: 100%;
+    border: none;
 }
 
-@media (max-width:767px){
-    .navbar{
-        height: 70px;
-    }
-    .navimage{
-        width: 50%;
-        margin-left: 10px;
-        margin-top: 10px;
-    }
+.account {
+    background-color: white !important;
+    border: none;
+    color: black !important;
+    padding-left: 0;
+}
 
-    .nav-item{
-        padding-left: 0;
-    }
+.account:hover {
+    background-color: white;
+    border: none;
+    color: black;
+}
 
-    .search {
-        height: 2.5rem;
-        position: absolute;
-        bottom: -13%;
-        right: 3%;   
-        
-    }
-
-    .input-group{
-        font-size: 10px;
-    }
-
-    .search input{
-    
-        object-fit: cover;
-        width: 80px;
-        
-    }
-
-    .search button{
-        height: 15px;
-        width: 15px;
-    }
-
-    .select{
-        width: 70px;
-        height: 15px;
-    }
-
-    .form{
-        width: 130px;
-        height: 15px;
-        
-    }
-
-    .navbar-toggler-icon{
-        position: absolute;
-        right: 10px;
-        top:15px
-    }
-
-
-    .select option{
-        font-size: 20px;
-    }
-
-    .donate{
-        width: fit-content;
-        padding:px;
-        margin: 0px;
-    }
-
-    .nav-item{
-        padding: 0px 5px;
-        margin: 0;
-    }
-
-    .nav-item a{
-        padding: 5px 3px;
-        margin: 0;
-        color: black;
-    }
-
-    .navbar-nav{
-        position: absolute;
-        top: 100%;
-        right: 0%;
-        /* padding: 10px; */
-        font-weight: 600;
-        font-size: 10px;
-        color: black;
-        flex-direction: row;
-    }
-
-
+.account:focus {
+    background-color: white;
+    border: none;
+    color: black;
 }

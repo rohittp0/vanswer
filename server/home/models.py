@@ -20,6 +20,7 @@ class Organization(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
     website = models.URLField()
+    image = models.ImageField(upload_to="organization_img", null=True, blank=True)
 
     def __str__(self):
         return self.name
