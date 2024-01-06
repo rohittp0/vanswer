@@ -1,4 +1,6 @@
 {% load static %}
+{% load constant_tags %}
+
 <link rel="stylesheet" href="{% static 'css/navbar.css' %}"/>
 <script
         src="https://kit.fontawesome.com/86529636e5.js"
@@ -41,14 +43,11 @@
                     <div class="input-group-prepend">
 
                         <select class="form-select" name="search_type">
-                            <option value="meta" selected>Manuals</option>
-                            <option value="elements">Playbooks</option>
-                            <option value="elements">Books</option>
-                            <option value="elements">Case studies</option>
-                            <option value="elements">Flip books</option>
-                            <option value="elements">Vendorlists</option>
+                            {% get_categories as categories %}
 
-
+                            {% for val, dis in categories %}
+                                <option value={{ val }}>{{ dis }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="search-input">

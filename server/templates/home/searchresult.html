@@ -1,38 +1,39 @@
 {% extends "base.html" %}
 {% load static %}
 {% block head %}
+    {% load constant_tags %}
+
     <title>searchresult</title>
     <link rel="stylesheet" href="{% static 'css/searchresult.css' %}"/>
 
 {% endblock head %}
 {% block content %}
 
-    <div class="row flex-column-reverse flex-sm-row">
+    <div class="row flex flex-sm-row">
         <div class="filter col-lg-2 col-md-2 col-sm-1 col-12">
-            <h3 id="format">Format</h3>
-            <h3 id="manual">Manuals</h3>
-            <h4 id="result">Result: 1-25 of 809</h4>
             <h4 id="refine">Refine Your Results</h4>
             <hr id="hr">
+            {% get_filters as filters %}
 
-
-            {% for field in field_names %}
+            {% for name, values in filters.items %}
                 <div class="dropdown">
-                    <button class="custom-dropdown-toggle" type="button" data-field="{{ field }}">
-                        <h6>{{ field }}</h6><i class="fas fa-caret-down"></i>
+                    <button class="custom-dropdown-toggle" type="button" data-field="{{ name }}">
+                        <h6>{{ name }}</h6><i class="fas fa-caret-down"></i>
                     </button>
                     <ul class="dropdown-menu">
-                        {% for data in dropdown %}
+                        {% for fil_value,fil_name in values.1 %}
                             <li>
                                 <div class="check">
                                     <label class="form-check-label" for="flexCheckDefault">
-                                        <span>{{ data }}</span>
+                                        <span>{{ fil_name }}</span>
                                     </label>
-                                    <input class="form-check-input" type="checkbox" value="{{ data }}"
+                                    <input name={{ values.0 }} class="form-check-input" type="checkbox"
+                                           value="{{ fil_value }}"
                                            id="flexCheckDefault">
                                 </div>
                             </li>
                         {% endfor %}
+
                     </ul>
                 </div>
             {% endfor %}
@@ -53,25 +54,30 @@
             {% endfor %}
             <div class="tittle">
                 <h2>search manuals</h2>
-                <div class="sort col-lg-5 col-md-4 col-sm-7 col-12">
+                <div class="sort">
                     <form method="GET">
-                        <div class="input-group1 ">
-                            <h6>View</h6>
-                            <div class="input-group-prepend">
+                        <div class="input-group1">
+                            <div>
+                                <h6>View</h6>
+                                <div class="input-group-prepend">
 
-                                <select class="view" name="search_type">
-                                    <option value="meta" selected>view1</option>
-                                    <option value="elements">view2</option>
-                                </select>
+                                    <select class="view" name="search_type">
+                                        <option value="meta" selected>List</option>
+                                        <option value="elements">view2</option>
+                                    </select>
+                                </div>
                             </div>
-                            <h6>Sort by</h6>
-                            <div class="input-group-prepend">
+                            <div>
+                                <h6>Sort by</h6>
+                                <div class="input-group-prepend">
 
-                                <select class="sort-by" name="search_type">
-                                    <option value="meta" selected>select1</option>
-                                    <option value="elements">select2</option>
-                                </select>
+                                    <select class="sort-by" name="search_type">
+                                        <option value="meta" selected>Date</option>
+                                        <option value="elements">select2</option>
+                                    </select>
+                                </div>
                             </div>
+
                             <div class="input-group-append">
                                 <button class="submit-go" type="submit">Go</button>
                             </div>
@@ -79,16 +85,14 @@
                     </form>
                 </div>
             </div>
-            <hr>
 
             {% for result in results %}
                 <hr>
 
-                <div class="card mb-3 border-0">
-                    <div class="row g-0">
+                <div class="mb-3 border-0">
+                    <div class="row">
                         <div class="col-md-3">
-                            <img id="image" src={{ result.image_url }} class="img-fluid"
-                                 alt="search_image">
+                            <img id="image" src={{ result.image_url }} class="img-fluid" alt="search_image">
                         </div>
 
                         <div class="col-md-8">
@@ -97,7 +101,7 @@
                                 <p class="content">{{ result.title }}</p>
                                 <p>Contributor : <span>{{ result.contributor }}</span></p>
                                 <p>Date: 2022</p>
-                                <p>Resource: <a href={{ result.read_more_url }}>View</a> </p>
+                                <p>Resource: <a href={{ result.read_more_url }}>View</a></p>
 
                             </div>
                         </div>
