@@ -1,9 +1,17 @@
 .navbar {
     background-color: white;
+
+    padding: 2rem;
+    padding-bottom: 0;
+}
+
+
+.navbar-container {
     display: flex;
     justify-content: space-between;
-    padding:  2rem;
-    padding-bottom: 1rem;
+    width: 100%;
+    border-bottom: 1px solid black;
+    padding-bottom: 2rem;
 }
 
 .navbar a {

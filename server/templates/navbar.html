@@ -9,69 +9,72 @@
 
 
 <nav class="navbar">
-    <div class="navbar-brand">
-        <a href="{% url 'home' %}">
-            <img
-                    src="{% static 'images/logo.png' %}"
-                    alt="logo"
-                    class="navimage img-fluid"
-            />
-        </a>
-    </div>
-    <div class="navbar-right">
-        <div class="navbar-top">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle account" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                    Account
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li><a class="dropdown-item" href="#">Logout</a></li>
-                </ul>
-            </div>
-            <a class="nav-link" href="#">Get Email Updates</a>
-            <a class="donate" href="#">Donate</a>
+    <div class="navbar-container">
+        <div class="navbar-brand">
+            <a href="{% url 'home' %}">
+                <img
+                        src="{% static 'images/logo.png' %}"
+                        alt="logo"
+                        class="navimage img-fluid"
+                />
+            </a>
         </div>
-        <div class="navbar-bottom">
-            <form
-                    method="GET"
-                    class="form-inline"
-                    action="{% url 'search' %}"
-            >
-                <div class="input-group search ">
-                    <div class="input-group-prepend">
-
-                        <select class="form-select" name="category">
-                            {% get_categories as categories %}
-
-                            {% for val, dis in categories %}
-                                <option value={{ val }}>{{ dis }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="search-input">
-                        <input
-                                type="text"
-                                class="form"
-                                placeholder="Search..."
-                                name="query"
-                                value="{{ query }}"
-                        />
-                    </div>
-
-                    <div class="search-icon input-group-append">
-                        <button type="submit">
-                            <i class="fas fa-magnifying-glass"></i>
-                        </button>
-                    </div>
-
+        <div class="navbar-right">
+            <div class="navbar-top">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle account" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Account
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="#">Logout</a></li>
+                    </ul>
                 </div>
-            </form>
+                <a class="nav-link" href="#">Get Email Updates</a>
+                <a class="donate" href="#">Donate</a>
+            </div>
+            <div class="navbar-bottom">
+                <form
+                        method="GET"
+                        class="form-inline"
+                        action="{% url 'search' %}"
+                >
+                    <div class="input-group search ">
+                        <div class="input-group-prepend">
+
+                            <select class="form-select" name="category">
+                                {% get_categories as categories %}
+
+                                {% for val, dis in categories %}
+                                    <option value={{ val }}>{{ dis }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="search-input">
+                            <input
+                                    type="text"
+                                    class="form"
+                                    placeholder="Search..."
+                                    name="query"
+                                    value="{{ query }}"
+                            />
+                        </div>
+
+                        <div class="search-icon input-group-append">
+                            <button type="submit">
+                                <i class="fas fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+
         </div>
-
-
     </div>
+
 </nav>
 
 {##}
