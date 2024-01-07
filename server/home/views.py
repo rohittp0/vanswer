@@ -51,7 +51,9 @@ def search(request):
 
     results = []
     # Process and display
-    metadata = MetaData.objects.filter(id__in=[meta.meta_id for meta in metas])
+
+
+    metadata = MetaData.objects.filter(meta_id__in=[meta.meta_id for meta in metas])
 
     #filtering
     language = request.GET.getlist('language')
@@ -66,16 +68,17 @@ def search(request):
     if language:
         metadata = metadata.filter(states__contains=location)
 
+
     for meta in metas:
-        print(meta, "m")
         for element in filter(lambda x: x[0] == meta.meta_id, api_result):
+            meta_data = metadata.get(meta_id=meta.meta_id)
             results.append({
                 'image_url': f"{meta.file_data.first().file.url}#page={element[1] + 1}",
                 'title': f"{meta.title} - Page No: {element[1] + 1}",
                 'description': meta.description,
                 'read_more_url': f"{meta.file_data.first().file.url}#page={element[1] + 1}",
-                'contributor': metadata.contributor,
-                'category': metadata.category,
+                'contributor': meta_data.contributor,
+                'category': meta_data.category,
             })
 
     return render(request, 'home/searchresult.html', {'query': query_text, 'results': results})
