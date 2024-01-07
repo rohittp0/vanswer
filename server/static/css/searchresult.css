@@ -53,7 +53,7 @@
 
 }
 
-.dropdown.active .dropdown-menu {
+.dropdown.active .drop-menu {
     display: block;
 }
 
@@ -82,17 +82,29 @@
 }
 
 
-.dropdown-menu {
+.drop-menu {
     border: none;
     text-decoration: none;
     font: inherit;
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
     z-index: 1;
-    margin-top: 0.3rem;
+    list-style-type: none;
+    padding: 0;
 }
+
+.drop-menu li {
+    border-bottom: 1px #000000 solid;
+    padding: 0.2rem 0;
+}
+
+.accordion-button {
+    background-color: white !important;
+    border: none !important;
+}
+
+.accordion-item {
+    border: none;
+}
+
 
 .dropdown-item {
     display: flex;
@@ -101,7 +113,6 @@
 }
 
 .check {
-    width: 180px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -120,7 +131,7 @@
 
 .check input {
     border-radius: 0;
-    border-color: blue;
+    border-color: black;
 }
 
 
@@ -297,4 +308,13 @@ hr {
     color: black;
     margin: 1em 0;
     padding: 0;
+}
+
+.filter-btn{
+    border: none;
+    background-color: black;
+    color: white;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
 }

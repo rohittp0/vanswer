@@ -33,6 +33,13 @@ def get_from_api(api: str, query: str):
     return api_result, metas
 
 
+def home(request):
+    return render(request, 'home/home.html')
+
+
+# =================================================================================================
+
+
 def search(request):
     query_text = request.GET.get('query')
 
@@ -42,9 +49,22 @@ def search(request):
     api_result, metas = get_from_api(request.GET.get('search_type'), query_text)
 
     results = []
-
     # Process and display
     metadata = MetaData.objects.filter(id__in=[meta.meta_id for meta in metas])
+
+    #filtering
+    language = request.GET.getlist('language')
+    if language:
+        metadata = metadata.filter(language__in=language)
+
+    format = request.GET.getlist('format')
+    if language:
+        metadata = metadata.filter(category__contains=format)
+
+    location = request.GET.getlist('location')
+    if language:
+        metadata = metadata.filter(states__contains=location)
+
     for meta in metas:
         print(meta, "m")
         for element in filter(lambda x: x[0] == meta.meta_id, api_result):
@@ -58,13 +78,6 @@ def search(request):
             })
 
     return render(request, 'home/searchresult.html', {'query': query_text, 'results': results})
-
-
-# =================================================================================================
-
-
-def home(request):
-    return render(request, 'home/home.html')
 
 
 def organization(request):

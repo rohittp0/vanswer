@@ -23,3 +23,13 @@ def get_filters():
     }
 
     return filters
+
+
+@register.filter
+def get_querydict_item(dictionary, key):
+    return dictionary.getlist(key, None)
+
+@register.filter
+def filter_in(list, value):
+    if list:
+        return value in list

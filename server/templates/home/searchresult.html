@@ -13,30 +13,78 @@
         <div class="filter col-lg-2 col-md-2 col-sm-1 col-12">
             <h4 id="refine">Refine Your Results</h4>
             <hr id="hr">
-            {% get_filters as filters %}
+            <form action="" method="get">
+                <div class="accordion" id="acc">
 
-            {% for name, values in filters.items %}
-                <div class="dropdown">
-                    <button class="custom-dropdown-toggle" type="button" data-field="{{ name }}">
-                        <h6>{{ name }}</h6><i class="fas fa-caret-down"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                        {% for fil_value,fil_name in values.1 %}
-                            <li>
-                                <div class="check">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        <span>{{ fil_name }}</span>
-                                    </label>
-                                    <input name={{ values.0 }} class="form-check-input" type="checkbox"
-                                           value="{{ fil_value }}"
-                                           id="flexCheckDefault">
+
+                    {% get_filters as filters %}
+
+                    {% for name, values in filters.items %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapse{{ name }}" aria-expanded="true"
+                                        aria-controls="collapse{{ name }}">
+                                    {{ name }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{ name }}" class="accordion-collapse collapse"
+                                 data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <ul class="drop-menu">
+
+
+                                        {% for fil_value, fil_name  in values.1 %}
+                                            <li>
+                                                <div class="check">
+                                                    <label class="form-check-label" for="flexCheckDefault">
+                                                        <span>{{ fil_name }}</span>
+                                                    </label>
+                                                    {% with get_param=request.GET|get_querydict_item:values.0 %}
+                                                        {% with checked=get_param|filter_in:fil_value %}
+                                                            <input name={{ values.0 }} class="form-check-input"
+                                                                   type="checkbox"
+                                                                   value="{{ fil_value }}"
+                                                                   {% if checked %}checked{% endif %}
+                                                            >
+                                                        {% endwith %}
+                                                    {% endwith %}
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+
+
+                                    </ul>
                                 </div>
-                            </li>
-                        {% endfor %}
+                            </div>
 
-                    </ul>
+                        </div>
+
+                        {#                #}
+                        {#                <div class="dropdown">#}
+                        {#                    <button class="custom-dropdown-toggle" type="button" data-field="{{ name }}">#}
+                        {#                        <h6>{{ name }}</h6><i class="fas fa-caret-down"></i>#}
+                        {#                    </button>#}
+                        {#                    <ul class="dropdown-menu">#}
+                        {#                        {% for fil_value,fil_name in values.1 %}#}
+                        {#                            <li>#}
+                        {#                                <div class="check">#}
+                        {#                                    <label class="form-check-label" for="flexCheckDefault">#}
+                        {#                                        <span>{{ fil_name }}</span>#}
+                        {#                                    </label>#}
+                        {#                                    <input name={{ values.0 }} class="form-check-input" type="checkbox"#}
+                        {#                                           value="{{ fil_value }}"#}
+                        {#                                           id="flexCheckDefault">#}
+                        {#                                </div>#}
+                        {#                            </li>#}
+                        {#                        {% endfor %}#}
+                        {##}
+                        {#                    </ul>#}
+                        {#                </div>#}
+                    {% endfor %}
+                    <button class="filter-btn">Filter</button>
                 </div>
-            {% endfor %}
+            </form>
 
 
         </div>
@@ -72,8 +120,9 @@
                                 <div class="input-group-prepend">
 
                                     <select class="sort-by" name="search_type">
-                                        <option value="meta" selected>Date</option>
-                                        <option value="elements">select2</option>
+                                        <option value="" selected>Select</option>
+
+                                        <option value="date" selected>Date</option>
                                     </select>
                                 </div>
                             </div>
