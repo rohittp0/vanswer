@@ -91,15 +91,15 @@
 
 
         <div class="result col-lg-9 col-md-9 col-sm-10 col-12">
-{#            <h4>Refined By</h4>#}
-{#            {% for mes in messages %}#}
-{#                <div class="alert  alert-dismissible fade show" role="alert">#}
-{#                    <strong>{{ mes }}</strong>#}
-{#                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">#}
-{#                        <span aria-hidden="true">&times;</span>#}
-{#                    </button>#}
-{#                </div>#}
-{#            {% endfor %}#}
+            {#            <h4>Refined By</h4>#}
+            {#            {% for mes in messages %}#}
+            {#                <div class="alert  alert-dismissible fade show" role="alert">#}
+            {#                    <strong>{{ mes }}</strong>#}
+            {#                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">#}
+            {#                        <span aria-hidden="true">&times;</span>#}
+            {#                    </button>#}
+            {#                </div>#}
+            {#            {% endfor %}#}
             <div class="tittle">
                 <h2>search manuals</h2>
                 <div class="sort">
@@ -141,7 +141,7 @@
                 <div class="mb-3 border-0">
                     <div class="row">
                         <div class="col-md-3">
-                            <img id="image" src={{ result.image_url }} class="img-fluid" alt="search_image">
+                            <img id="image" src={% get_media_prefix %}{{ result.image_url }} class="img-fluid" alt="search_image">
                         </div>
 
                         <div class="col-md-8">
@@ -150,7 +150,7 @@
                                 <p class="content">{{ result.title }}</p>
                                 <p>Contributor : <span>{{ result.contributor }}</span></p>
                                 <p>Date: 2022</p>
-                                <p>Resource: <a href={{ result.read_more_url }}>View</a></p>
+                                <p>Resource: <a href={{ result.read_more_url }} target="_blank">View</a></p>
 
                             </div>
                         </div>
@@ -165,54 +165,5 @@
 {% endblock content %}
 {% block script %}
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-
-
-    <script>
-        $(document).ready(function() {
-            $(".custom-dropdown-toggle").on("click", function() {
-                // Toggle the 'active' class on the parent .dropdown element
-                $(this).closest('.dropdown').toggleClass('active');
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $(".custom-dropdown-toggle").on("click", function() {
-                var field = $(this).data("field");
-
-                $.ajax({
-                    type: "GET",
-                    url: "{% url 'searchresult' %}",
-            data: {
-                field: field
-            },
-            success: function(response) {
-                // Assuming you have a container for the dropdown content
-                updateDropdownContent(response.dropdown_values);
-            },
-            error: function(error) {
-                console.log("Error:", error);
-            }
-        });
-    });
-
-    function updateDropdownContent(dropdownValues) {
-        // Clear previous dropdown content
-        $(".dropdown-menu").empty();
-
-        // Append new dropdown items
-        var dropdownMenu = $(".dropdown-menu");
-        for (var i = 0; i < dropdownValues.length; i++) {
-            var data = dropdownValues[i];
-            var listItem = $('<li><div class="check"><label class="form-check-label" for="flexCheckDefault"><span>' + data + '</span></label><input class="form-check-input" type="checkbox" value="' + data + '" id="flexCheckDefault"></div></li>');
-            dropdownMenu.append(listItem);
-        }
-    }
-});
-    </script>
-
-
 
 {% endblock script %}

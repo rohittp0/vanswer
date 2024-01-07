@@ -1,5 +1,7 @@
 import json
 import logging
+import os
+from pathlib import Path
 
 import requests
 from django.conf import settings
@@ -10,7 +12,9 @@ from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.forms import model_to_dict
 from home.constants import language_choices, category_choices, file_types, state_choices, url_types
+from pdf2image import convert_from_path
 from vanswer.utils import ChoiceArrayField
 
 logger = logging.getLogger("home.models")
@@ -44,6 +48,9 @@ class MetaData(models.Model):
     verified_by = models.ForeignKey("auth.User", on_delete=models.SET_NULL, null=True, blank=True,
                                     related_name="verifications")
     status = models.CharField(max_length=15, default="pending")
+
+    preview_image = models.ImageField(upload_to='previews/', blank=True, null=True)
+
 
     class Meta:
         indexes = (GinIndex(fields=["description_vector"]),)
@@ -83,6 +90,28 @@ class FileData(models.Model):
     def __str__(self):
         return f"{self.meta_data.title}"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.type == 'pdf':
+            self.create_preview_image()
+
+    def create_preview_image(self):
+        pdf_path = self.file.path
+
+        # Directory to save the preview image
+        output_folder = os.path.join(settings.MEDIA_ROOT, 'previews')
+        os.makedirs(output_folder, exist_ok=True)
+
+        images = convert_from_path(pdf_path, first_page=1, last_page=1, dpi=72)
+        if images:
+            preview_image_name = f'preview_{self.pk}.jpg'
+            image_path = Path(output_folder) / preview_image_name
+            images[0].save(str(image_path), 'JPEG')
+
+            image_relative_path = image_path.relative_to(Path(settings.MEDIA_ROOT))
+            self.meta_data.preview_image = str(image_relative_path)
+            self.meta_data.save()
+
 
 class UrlData(models.Model):
     url = models.URLField()
@@ -118,7 +147,7 @@ def update_file_data(sender, instance: MetaData, created, **__):
         "tags": instance.tags,
         "states": instance.states,
         "description": instance.description,
-        "organization": instance.organization
+        "organization": model_to_dict(instance.organization)
     }
 
     # Open the file in binary mode
