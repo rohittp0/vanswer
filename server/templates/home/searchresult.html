@@ -15,7 +15,7 @@
             <hr id="hr">
             <form action="" method="get">
                 <div class="accordion" id="acc">
-
+                    <input type="hidden" name="query" value={{ request.GET.query }}>
 
                     {% get_filters as filters %}
 
@@ -91,15 +91,15 @@
 
 
         <div class="result col-lg-9 col-md-9 col-sm-10 col-12">
-            <h4>Refined By</h4>
-            {% for mes in messages %}
-                <div class="alert  alert-dismissible fade show" role="alert">
-                    <strong>{{ mes }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
+{#            <h4>Refined By</h4>#}
+{#            {% for mes in messages %}#}
+{#                <div class="alert  alert-dismissible fade show" role="alert">#}
+{#                    <strong>{{ mes }}</strong>#}
+{#                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">#}
+{#                        <span aria-hidden="true">&times;</span>#}
+{#                    </button>#}
+{#                </div>#}
+{#            {% endfor %}#}
             <div class="tittle">
                 <h2>search manuals</h2>
                 <div class="sort">

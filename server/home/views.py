@@ -45,7 +45,7 @@ def search(request):
     search_type = request.GET.get('search_type')
 
     if not query_text:
-        return render(request, 'home/search.html', {'query': "", 'results': []})
+        return render(request, 'home/searchresult.html', {'query': "", 'results': []})
 
     api_result, metas = get_from_api("meta" if search_type is None else search_type, query_text)
 
