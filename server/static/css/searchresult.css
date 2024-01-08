@@ -1,0 +1,320 @@
+.row {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-around;
+    margin-top: 3rem;
+
+}
+
+.filter {
+    /*display: inline-block;*/
+
+}
+
+@media (max-width: 767px) {
+    .filter {
+        top: 50px;
+    }
+}
+
+.filter #format {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.filter #manual {
+    text-transform: uppercase;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 15px 0px;
+}
+
+.filter #result {
+    text-transform: capitalize;
+    font-weight: 400;
+    padding-bottom: 10px;
+}
+
+#hr {
+    border: none;
+    border-top: 2px solid black;
+}
+
+
+.dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.5rem;
+    border-bottom: 1px solid;
+
+}
+
+.dropdown.active .drop-menu {
+    display: block;
+}
+
+
+.custom-dropdown-toggle {
+    background-color: transparent;
+    border: none;
+    text-decoration: none;
+    padding: 0;
+    font: inherit;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    letter-spacing: 1px;
+    font-weight: 900;
+
+}
+
+
+.custom-dropdown-toggle h6 {
+    margin: 0;
+}
+
+.custom-dropdown-toggle {
+}
+
+
+.drop-menu {
+    border: none;
+    text-decoration: none;
+    font: inherit;
+    z-index: 1;
+    list-style-type: none;
+    padding: 0;
+}
+
+.drop-menu li {
+    border-bottom: 1px #000000 solid;
+    padding: 0.2rem 0;
+}
+
+.accordion-button {
+    background-color: white !important;
+    border: none !important;
+}
+
+.accordion-item {
+    border: none;
+}
+
+
+.dropdown-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+}
+
+.check {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media (max-width: 767px) {
+    .check {
+        width: 250px;
+    }
+}
+
+#count2 {
+    padding-left: 30px;
+
+}
+
+.check input {
+    border-radius: 0;
+    border-color: black;
+}
+
+
+/* =========================================================== */
+.result {
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.alert {
+    background-color: rgba(132, 132, 205, 0.329);
+    width: fit-content;
+    padding: 5px 13px;
+    border-radius: 60px;
+    display: inline-block;
+    background-color: transparent;
+    border-color: blue;
+    color: rgba(0, 0, 255, 0.726);
+    font-weight: 300;
+
+}
+
+.alert .close {
+    border: 1px;
+    color: blue;
+    background-color: transparent;
+    font-weight: 300;
+
+}
+
+.tittle {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /*justify-content: space-between;*/
+}
+
+.sort {
+    align-self: flex-end;
+}
+
+.tittle h2 {
+    text-transform: uppercase;
+}
+
+@media (max-width: 767px) {
+    .tittle {
+        display: block;
+    }
+
+    .tittle h2 {
+        width: fit-content;
+
+    }
+
+    .input-group1 {
+        position: relative;
+        top: 10px;
+        right: 10px;
+        width: fit-content;
+        display: flex;
+        z-index: 100;
+        align-items: center;
+    }
+
+
+}
+
+.input-group1 {
+    display: flex;
+    gap: 0.5rem;
+
+}
+
+.input-group1 div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.input-group1 h6 {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.view {
+    padding: 7px 0px;
+    border: 2px solid;
+}
+
+
+.sort-by {
+    padding: 7px 0px;
+    border: 2px solid;
+    width: 200px;
+}
+
+@media (max-width: 767px) {
+    .sort-by {
+        width: 100px;
+    }
+}
+
+.submit-go {
+    padding: 0.5rem 0.5rem;
+    border: 1px black;
+    background-color: black;
+    color: white;
+}
+
+.card .col-md-8 {
+    height: 250px;
+}
+
+.card-title {
+    text-transform: uppercase;
+
+}
+
+.card-body {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+
+}
+
+.card-body p {
+    text-transform: capitalize;
+}
+
+.card-body .content {
+    color: rgb(88, 88, 216);
+    font-size: large;
+
+}
+
+.card-body span {
+    text-transform: uppercase;
+}
+
+
+.card-body p a {
+    text-decoration: none;
+}
+
+.card-img {
+    border: 10px solid;
+}
+
+.img-fluid {
+    max-width: 100%;
+    margin-top: 1.5rem;
+}
+
+.card-right {
+    height: fit-content;
+}
+
+.card-container {
+    margin: 0;
+}
+
+
+hr {
+    width: 100%;
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 2px solid black;
+    color: black;
+    margin: 1em 0;
+    padding: 0;
+}
+
+.filter-btn{
+    border: none;
+    background-color: black;
+    color: white;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+}

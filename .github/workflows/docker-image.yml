@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - dtl-fix
     paths:
       - '**/Dockerfile'
       - '**/requirements.txt'

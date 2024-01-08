@@ -1,0 +1,90 @@
+.navbar {
+    background-color: white;
+
+    padding: 2rem;
+    padding-bottom: 0;
+}
+
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 1px solid black;
+    padding-bottom: 2rem;
+}
+
+.navbar a {
+    color: black;
+    text-decoration: none;
+}
+
+.navbar-top {
+    display: flex;
+    padding: 0.5rem 1rem;
+    align-items: center;
+    gap: 1rem;
+    padding-left: 0;
+}
+
+.navbar-right {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+
+}
+
+.donate {
+    background-color: #033503;
+    padding: 0.5rem 1rem;
+    color: white !important;
+    border: none;
+}
+
+.search {
+    display: flex;
+    align-items: stretch;
+}
+
+.search select {
+    border: black 2px solid;
+    height: 100%;
+    border-radius: 0;
+}
+
+.search input {
+    height: 100%;
+    border: black 2px solid;
+    padding: 0.5rem 1rem;
+    width: 8rem;
+
+}
+
+
+.search button {
+    background-color: black;
+    color: white;
+    padding: 0.5rem 1rem;
+    height: 100%;
+    border: none;
+}
+
+.account {
+    background-color: white !important;
+    border: none;
+    color: black !important;
+    padding-left: 0;
+}
+
+.account:hover {
+    background-color: white;
+    border: none;
+    color: black;
+}
+
+.account:focus {
+    background-color: white;
+    border: none;
+    color: black;
+}
