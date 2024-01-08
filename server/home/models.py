@@ -147,7 +147,7 @@ def update_file_data(sender, instance: MetaData, created, **__):
         "tags": instance.tags,
         "states": instance.states,
         "description": instance.description,
-        "organization": model_to_dict(instance.organization)
+        "organization": instance.organization.name
     }
 
     # Open the file in binary mode
