@@ -13,3 +13,5 @@ server/media/
 res/query.csv
 **/*.pkl
 server/files/
+**/__pycache__/
+server/staticfiles/
