@@ -6,7 +6,7 @@ on:
       - master
 
     paths:
-      - 'pg.Dockerfile'
+      - 'pg.DockerFile'
   workflow_dispatch:
 
 jobs:
@@ -26,7 +26,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.folder }}
-          file: ./pg.Dockerfile
+          file: ./pg.DockerFile
           push: true
           tags: |
             rohittp0/pg-vector:${{ github.sha }}
