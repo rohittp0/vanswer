@@ -1,23 +1,15 @@
-import json
-import logging
 import os
 from pathlib import Path
 
-import requests
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.forms import model_to_dict
 from home.constants import language_choices, category_choices, file_types, state_choices, url_types
 from pdf2image import convert_from_path
 from vanswer.utils import ChoiceArrayField
-
-logger = logging.getLogger("home.models")
 
 
 class Organization(models.Model):
@@ -50,7 +42,6 @@ class MetaData(models.Model):
     status = models.CharField(max_length=15, default="pending")
 
     preview_image = models.ImageField(upload_to='previews/', blank=True, null=True)
-
 
     class Meta:
         indexes = (GinIndex(fields=["description_vector"]),)
@@ -124,58 +115,3 @@ class UrlData(models.Model):
 
     def __str__(self):
         return f"{self.meta_data.title}"
-
-
-@receiver(post_save, sender=MetaData)
-def update_file_data(sender, instance: MetaData, created, **__):
-    if created:
-        return
-
-    if instance.status != "approved":
-        return
-
-    instance.status = "processing"
-    instance.save()
-
-    url = f"{settings.VECTOR_API_URL}/upload/"
-
-    # Serialize the MetaData object to JSON
-    meta_json = {
-        "name": instance.title,
-        "language": instance.language,
-        "type": instance.category,
-        "tags": instance.tags,
-        "states": instance.states,
-        "description": instance.description,
-        "organization": instance.organization.name
-    }
-
-    # Open the file in binary mode
-    with open(instance.file_data.first().file.path, 'rb') as f:
-        files = {
-            'file': (instance.file_data.first().file.name, f, 'application/octet-stream'),
-            'meta': (None, json.dumps(meta_json), 'application/json'),
-        }
-        try:
-            response = requests.post(url, files=files)
-        except requests.exceptions.ConnectionError:
-            logger.error(f"Vector API connection error")
-            instance.status = "failed"
-            return instance.save()
-
-    if response.status_code != 200:
-        logger.error(f"Vector API error status code {response.status_code} - {response.text}")
-        instance.status = "failed"
-        return instance.save()
-
-    # Get the response as JSON
-    response_json = response.json()
-
-    if response_json["status"] == "success":
-        instance.meta_id = response_json["key"]
-        instance.status = "processed"
-    else:
-        logger.error(f"Error processing file: {response_json['error']}")
-        instance.status = "failed"
-
-    instance.save()

@@ -3,7 +3,7 @@ version: '3.5'
 services:
   db:
     container_name: postgres
-    image: postgres
+    image: ankane/pgvector
     restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -28,7 +28,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      VECTOR_API_URL: "http://fastapi-app:4000"
       DJANGO_KEY: ${DJANGO_KEY}
       DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD}
       DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME}
