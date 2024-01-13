@@ -9,7 +9,7 @@ class Embedding(models.Model):
     index = models.IntegerField(default=-1)
     offset = models.IntegerField(default=-1)
     meta_data = models.ForeignKey(MetaData, on_delete=models.CASCADE, related_name="embeddings")
-    resource_type = models.CharField(max_length=3, choices=(('pdf', 'pdf'), ('url', 'url')))
+    resource_type = models.CharField(max_length=5, choices=(('file', 'file'), ('url', 'url')))
 
     def __str__(self):
         return self.meta_data.title
