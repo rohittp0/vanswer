@@ -3,10 +3,15 @@ from django.dispatch import receiver
 
 from home.models import FileData, MetaData
 from vector.models import Embedding
+from vector.operations import process_pdf, elements_to_embeddings
 
 
 def get_embeddings(file_data: FileData):
-    return []
+    if file_data.type != "pdf":
+        return []
+
+    pdf_elements = process_pdf(file_data.file.path)
+    return elements_to_embeddings(pdf_elements)
 
 
 @receiver(post_save, sender=MetaData)
@@ -15,7 +20,8 @@ def generate_embeddings(sender, instance: MetaData, created, **__):
         return
 
     if instance.file_data.count() == 0:
-        return
+        instance.status = "no_files"
+        instance.save()
 
     instance.status = "processing"
     instance.save()
@@ -25,13 +31,14 @@ def generate_embeddings(sender, instance: MetaData, created, **__):
     for i, file_data in enumerate(instance.file_data.all()):
         embeddings = get_embeddings(file_data)
 
-        for j, embedding in enumerate(embeddings):
+        for embedding in embeddings:
             Embedding.objects.create(
-                embedding=embedding,
+                embedding=embedding["embedding"],
                 index=i,
-                offset=j,
+                offset=embedding["index"],
                 meta_data=instance,
-                resource_type=file_data.type
+                resource_type="file",
+                text=embedding["text"]
             )
 
     instance.status = "processed"
