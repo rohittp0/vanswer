@@ -3,7 +3,7 @@ version: '3.5'
 services:
   db:
     container_name: postgres
-    image: ankane/pgvector
+    image: rohittp0/pg-vector
     restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -30,7 +30,7 @@ services:
   celery_worker:
     container_name: celery_worker
     image: rohittp0/vanswer-server
-    command: ["celery", "-A", "vanswer", "--loglevel=info"]
+    command: ["celery", "-A", "vanswer"]
     environment:
       POSTGRES_HOST: "db"
       POSTGRES_PORT: "5432"
@@ -50,6 +50,7 @@ services:
   server:
     container_name: server
     image: rohittp0/vanswer-server
+    command: ["bash", "run.sh"]
     environment:
       POSTGRES_HOST: "db"
       POSTGRES_PORT: "5432"

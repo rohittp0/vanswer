@@ -1,4 +1,4 @@
-name: Build Server Docker Image
+name: Build PG Docker Image
 
 on:
   push:
@@ -6,8 +6,7 @@ on:
       - master
 
     paths:
-      - 'Dockerfile'
-      - 'requirements.txt'
+      - 'pg.Dockerfile'
   workflow_dispatch:
 
 jobs:
@@ -27,8 +26,8 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.folder }}
-          file: ./Dockerfile
+          file: ./pg.Dockerfile
           push: true
           tags: |
-            rohittp0/vanswer-server:${{ github.sha }}
-            rohittp0/vanswer-server:latest
+            rohittp0/pg-vector:${{ github.sha }}
+            rohittp0/pg-vector:latest
