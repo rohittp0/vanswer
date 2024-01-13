@@ -1,3 +1,4 @@
+from celery import shared_task
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -14,14 +15,9 @@ def get_embeddings(file_data: FileData):
     return elements_to_embeddings(pdf_elements)
 
 
-@receiver(post_save, sender=MetaData)
-def generate_embeddings(sender, instance: MetaData, created, **__):
-    if created or instance.status != "approved":
-        return
-
-    if instance.file_data.count() == 0:
-        instance.status = "no_files"
-        instance.save()
+@shared_task
+def generate_embeddings_task(meta_id: int):
+    instance = MetaData.objects.get(id=meta_id)
 
     instance.status = "processing"
     instance.save()
@@ -42,3 +38,16 @@ def generate_embeddings(sender, instance: MetaData, created, **__):
             )
 
     instance.status = "processed"
+    instance.save()
+
+
+@receiver(post_save, sender=MetaData)
+def generate_embeddings(sender, instance, created, **kwargs):
+    if created or instance.status != "approved":
+        return
+
+    if instance.file_data.count() == 0:
+        instance.status = "no_files"
+        instance.save()
+
+    generate_embeddings_task.delay(instance.id)

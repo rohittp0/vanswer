@@ -3,9 +3,8 @@ name: Build and Push Docker Images
 on:
   push:
     branches:
-      - main
       - master
-      - dtl-fix
+
     paths:
       - 'Dockerfile'
       - 'requirements.txt'

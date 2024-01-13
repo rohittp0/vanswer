@@ -27,3 +27,4 @@ torch~=2.1.1+cu121
 transformers~=4.35.2
 tqdm~=4.66.1
 PyMuPDF==1.23.12
+celery==5.3.6
