@@ -27,6 +27,7 @@ category_choices = (
     ("other", "Other"),
 )
 
+
 file_types = (
     ("pdf", "PDF"),
     ("doc", "DOC"),

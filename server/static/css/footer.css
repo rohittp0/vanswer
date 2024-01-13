@@ -1,0 +1,112 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+.footer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    padding: 2rem 1rem;
+}
+
+.list1 {
+    width: fit-content;
+    left: 35%;
+}
+
+.list1 ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    border: 1px solid;
+    padding: 0;
+}
+
+.list1 li {
+    display: flex;
+}
+
+
+.list1 li :hover {
+    color: white;
+    background-color: black;
+}
+
+.list1 a {
+    display: block;
+    text-decoration: none;
+    color: black;
+    padding: 8px 25px;
+    border: 0.1px solid black;
+    font-size: 20px;
+}
+
+
+/*@media (max-width: 767px) {*/
+
+
+/*    .list1 {*/
+/*        left: 0;*/
+/*        width: 100%;*/
+/*        text-align: center;*/
+/*        margin-top: 240px;*/
+
+/*    }*/
+
+/*    .list1 ul {*/
+/*        justify-content: space-around;*/
+/*        flex-direction: column;*/
+/*        align-items: center;*/
+/*        padding: 10px 0;*/
+/*        border: none;*/
+/*        !* margin-top: 50%; *!*/
+/*        margin-left: 60%;*/
+/*    }*/
+
+/*    .list1 a {*/
+/*        padding: 10px;*/
+/*        font-size: 16px;*/
+/*        margin-bottom: 5px;*/
+/*        border: none;*/
+/*        font-size: 14px;*/
+/*    }*/
+/*}*/
+
+
+.list2, .list3 {
+    display: flex;
+
+}
+
+.list2 {
+    gap: 2rem;
+    margin-bottom: 0.2rem;
+    font-weight: bold;
+}
+
+.list2 i{
+
+    font-size: 1.5rem;
+}
+
+#followus{
+    font-weight: bold;
+}
+.list3{
+    gap:2rem;
+    padding-top: 0.6rem;
+    border-top: 2px black solid;
+}
+
+.list2 a {
+    text-decoration: inherit;
+    color: black;
+}
+
+.list3 a {
+    text-decoration: inherit;
+    color: black;
+}

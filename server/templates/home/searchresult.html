@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head %}
+    {% load constant_tags %}
+
+    <title>searchresult</title>
+    <link rel="stylesheet" href="{% static 'css/searchresult.css' %}"/>
+
+{% endblock head %}
+{% block content %}
+
+    <div class="row flex flex-sm-row">
+        <div class="filter col-lg-2 col-md-2 col-sm-1 col-12">
+            <h4 id="refine">Refine Your Results</h4>
+            <hr id="hr">
+            <form action="" method="get">
+                <div class="accordion" id="acc">
+                    <input type="hidden" name="query" value={{ request.GET.query }}>
+
+                    {% get_filters as filters %}
+
+                    {% for name, values in filters.items %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapse{{ name }}" aria-expanded="true"
+                                        aria-controls="collapse{{ name }}">
+                                    {{ name }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{ name }}" class="accordion-collapse collapse"
+                                 data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <ul class="drop-menu">
+
+
+                                        {% for fil_value, fil_name  in values.1 %}
+                                            <li>
+                                                <div class="check">
+                                                    <label class="form-check-label" for="flexCheckDefault">
+                                                        <span>{{ fil_name }}</span>
+                                                    </label>
+                                                    {% with get_param=request.GET|get_querydict_item:values.0 %}
+                                                        {% with checked=get_param|filter_in:fil_value %}
+                                                            <input name={{ values.0 }} class="form-check-input"
+                                                                   type="checkbox"
+                                                                   value="{{ fil_value }}"
+                                                                   {% if checked %}checked{% endif %}
+                                                            >
+                                                        {% endwith %}
+                                                    {% endwith %}
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        {#                #}
+                        {#                <div class="dropdown">#}
+                        {#                    <button class="custom-dropdown-toggle" type="button" data-field="{{ name }}">#}
+                        {#                        <h6>{{ name }}</h6><i class="fas fa-caret-down"></i>#}
+                        {#                    </button>#}
+                        {#                    <ul class="dropdown-menu">#}
+                        {#                        {% for fil_value,fil_name in values.1 %}#}
+                        {#                            <li>#}
+                        {#                                <div class="check">#}
+                        {#                                    <label class="form-check-label" for="flexCheckDefault">#}
+                        {#                                        <span>{{ fil_name }}</span>#}
+                        {#                                    </label>#}
+                        {#                                    <input name={{ values.0 }} class="form-check-input" type="checkbox"#}
+                        {#                                           value="{{ fil_value }}"#}
+                        {#                                           id="flexCheckDefault">#}
+                        {#                                </div>#}
+                        {#                            </li>#}
+                        {#                        {% endfor %}#}
+                        {##}
+                        {#                    </ul>#}
+                        {#                </div>#}
+                    {% endfor %}
+                    <button class="filter-btn">Filter</button>
+                </div>
+            </form>
+
+
+        </div>
+
+
+        <div class="result col-lg-9 col-md-9 col-sm-10 col-12">
+            {#            <h4>Refined By</h4>#}
+            {#            {% for mes in messages %}#}
+            {#                <div class="alert  alert-dismissible fade show" role="alert">#}
+            {#                    <strong>{{ mes }}</strong>#}
+            {#                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">#}
+            {#                        <span aria-hidden="true">&times;</span>#}
+            {#                    </button>#}
+            {#                </div>#}
+            {#            {% endfor %}#}
+            <div class="tittle">
+                <h2>search manuals</h2>
+                <div class="sort">
+                    <form method="GET">
+                        <div class="input-group1">
+                            <div>
+                                <h6>View</h6>
+                                <div class="input-group-prepend">
+
+                                    <select class="view" name="search_type">
+                                        <option value="meta" selected>List</option>
+                                        <option value="elements">view2</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <h6>Sort by</h6>
+                                <div class="input-group-prepend">
+
+                                    <select class="sort-by" name="search_type">
+                                        <option value="" selected>Select</option>
+
+                                        <option value="date" selected>Date</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="input-group-append">
+                                <button class="submit-go" type="submit">Go</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% for result in results %}
+                <hr>
+
+                <div class="mb-3 border-0">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img id="image" src={% get_media_prefix %}{{ result.image_url }} class="img-fluid" alt="search_image">
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ result.category }}</h5>
+                                <p class="content">{{ result.title }}</p>
+                                <p>Contributor : <span>{{ result.contributor }}</span></p>
+                                <p>Date: 2022</p>
+                                <p>Resource: <a href={{ result.read_more_url }} target="_blank">View</a></p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+{% endblock content %}
+{% block script %}
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+{% endblock script %}
