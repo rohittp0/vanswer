@@ -53,6 +53,13 @@ class MetaDataAdmin(admin.ModelAdmin):
 
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ('name', )
-    search_fields = ('name', )
+    list_display = ('name',)
+    search_fields = ('name',)
     list_per_page = 25
+
+
+@admin.register(FileData)
+class FileDataAdmin(admin.ModelAdmin):
+    list_display = ('meta_data', 'file', 'type')
+    search_fields = ('meta_data__title', 'meta_data__description', 'meta_data__keywords')
+    readonly_fields = ('type', 'meta_data', 'file')

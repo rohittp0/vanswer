@@ -7,6 +7,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import models
+
 from home.constants import language_choices, category_choices, file_types, state_choices, url_types
 from pdf2image import convert_from_path
 from vanswer.utils import ChoiceArrayField

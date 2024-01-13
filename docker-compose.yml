@@ -3,7 +3,7 @@ version: '3.5'
 services:
   db:
     container_name: postgres
-    image: ankane/pgvector
+    image: rohittp0/pg-vector
     restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -13,15 +13,44 @@ services:
       - "5432:5432"
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/postgres:/var/lib/postgresql/data
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: always
     healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      test: ["CMD-SHELL", "rabbitmqctl status"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  celery_worker:
+    container_name: celery_worker
+    image: rohittp0/vanswer-server
+    command: ["celery", "-A", "vanswer", "worker", "--loglevel=info"]
+    environment:
+      POSTGRES_HOST: "db"
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DJANGO_KEY: ${DJANGO_KEY}
+      RABBITMQ_HOST: "rabbitmq"
+    volumes:
+      - ./:/usr/src/app
+      - ${MEDIA_ROOT}:/usr/src/app/media
+    depends_on:
+      - db
+      - rabbitmq
+    restart: unless-stopped
 
   server:
     container_name: server
     image: rohittp0/vanswer-server
+    command: ["bash", "run.sh"]
     environment:
       POSTGRES_HOST: "db"
       POSTGRES_PORT: "5432"
@@ -37,16 +66,14 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./server:/usr/src/app
+      - ./:/usr/src/app
       - ${STATIC_ROOT}:/usr/src/app/staticfiles
       - ${MEDIA_ROOT}:/usr/src/app/media
-      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/pip-cache:/root/.cache/pip
       - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/hf-models:/root/.cache/huggingface
     depends_on:
-      db:
-        condition: service_healthy
+      - celery_worker
     restart: unless-stopped
 
 networks:
   default:
-    name: milvus
+    name: vanswer
