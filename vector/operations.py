@@ -6,7 +6,7 @@ import fitz
 import torch
 import torch.nn.functional as F
 
-from store import EmbeddingParams, get_embedder, device, Embeds
+from vector.store import EmbeddingParams, get_embedder, device, Embeds
 
 
 def mean_pooling(model_output, attention_mask):
