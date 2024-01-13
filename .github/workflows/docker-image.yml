@@ -5,9 +5,10 @@ on:
     branches:
       - main
       - master
+      - dtl-fix
     paths:
-      - '**/Dockerfile'
-      - '**/requirements.txt'
+      - 'Dockerfile'
+      - 'requirements.txt'
   workflow_dispatch:
 
 jobs:
@@ -17,9 +18,7 @@ jobs:
       matrix:
         include:
           - image: rohittp0/vanswer-server
-            folder: server
-          - image: rohittp0/vanswer-vector
-            folder: vector
+            folder: .
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
 
-    'home'
+    'home',
+    'vector'
 ]
 
 MIDDLEWARE = [
