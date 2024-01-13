@@ -15,10 +15,10 @@ def get_categories():
 @register.simple_tag
 def get_filters():
     filters = {
-        "Language": ["language", language_choices],
-        "Category": ["format", category_choices],
+        "Language": ["language", language_choices, "checkbox"],
+        "Formats": ["format", category_choices, "radio"],
         # "file_type": [file_types],
-        "Location": ["location", state_choices],
+        "Location": ["location", state_choices, "checkbox"],
         # "url_type": [url_types],
     }
 
@@ -26,8 +26,12 @@ def get_filters():
 
 
 @register.filter
-def get_querydict_item(dictionary, key):
+def get_querydict_list(dictionary, key):
     return dictionary.getlist(key, None)
+
+@register.filter
+def get_querydict_item(dictionary, key):
+    return dictionary.get(key, None)
 
 @register.filter
 def filter_in(list, value):

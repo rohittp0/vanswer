@@ -78,3 +78,10 @@ state_choices = (
     ("dnhdd", "Dadra & Nagar Haveli and Daman & Diu"),
     ("la", "Ladakh"),
 )
+
+
+def get_display_name(list, key):
+    for item in list:
+        if item[0] == key:
+            return item[1]
+    return None
