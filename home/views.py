@@ -12,9 +12,15 @@ from home.models import MetaData, Organization
 from vector.models import Embedding
 from vector.operations import texts_to_embeddings
 
+collection_name = "main"
+
+
 
 def home(request):
     return render(request, 'home/home.html')
+
+
+# =================================================================================================
 
 
 def search(request):
@@ -25,10 +31,8 @@ def search(request):
 
     results = []
 
-    embeddings = Embedding.objects.filter(verified=True)
-
     query_emdeddings = texts_to_embeddings(query_text)
-    embeddings = embeddings.order_by(MaxInnerProduct('embedding', query_emdeddings[0]))
+    embeddings = Embedding.objects.order_by(MaxInnerProduct('embedding', query_emdeddings[0]))
 
     org = request.GET.get('org')
     org_data = None
@@ -63,6 +67,7 @@ def search(request):
         embeddings = embeddings.order_by('-meta_data__date')
     elif sort == "latest":
         embeddings = embeddings.order_by('meta_data__date')
+
 
     for emb in embeddings:
         results.append({
