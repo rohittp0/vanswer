@@ -26,7 +26,7 @@ class OrgImagesInline(admin.TabularInline):
 @admin.register(MetaData)
 class MetaDataAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'status')
-    search_fields = ('title', 'description', 'keywords')
+    search_fields = ('title', 'description')
     readonly_fields = ('status', 'verified_by', 'verified')
     list_per_page = 50
 

@@ -1,5 +1,5 @@
 from celery import shared_task
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
 from home.models import FileData, MetaData
@@ -24,18 +24,23 @@ def generate_embeddings_task(meta_id: int):
 
     instance.embeddings.all().delete()
 
-    for i, file_data in enumerate(instance.file_data.all()):
-        embeddings = get_embeddings(file_data)
+    try:
+        for i, file_data in enumerate(instance.file_data.all()):
+            embeddings = get_embeddings(file_data)
 
-        for embedding in embeddings:
-            Embedding.objects.create(
-                embedding=embedding["embedding"],
-                index=i,
-                offset=embedding["index"],
-                meta_data=instance,
-                resource_type="file",
-                text=embedding["text"]
-            )
+            for embedding in embeddings:
+                Embedding.objects.create(
+                    embedding=embedding["embedding"],
+                    index=i,
+                    offset=embedding["index"],
+                    meta_data=instance,
+                    resource_type="file",
+                    text=embedding["text"]
+                )
+    except Exception as e:
+        instance.status = "error"
+        instance.save()
+        raise e
 
     instance.status = "processed"
     instance.save()
@@ -46,18 +51,6 @@ def update_embedding_task(embedding_id: int):
     embedding = Embedding.objects.get(id=embedding_id)
     embedding.embedding = texts_to_embeddings([embedding.text])[0]
     embedding.save()
-
-
-@receiver(post_save, sender=MetaData)
-def generate_embeddings(sender, instance, created, **_):
-    if created or instance.status != "approved":
-        return
-
-    if instance.file_data.count() == 0:
-        instance.status = "no_files"
-        instance.save()
-
-    generate_embeddings_task.delay(instance.id)
 
 
 @receiver(pre_save, sender=Embedding)

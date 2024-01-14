@@ -69,6 +69,10 @@ class MetaData(models.Model):
         if self.status == "processing" and status:
             return
 
+        if status and self.file_data.count() > 0:
+            from vector.tasks import generate_embeddings_task
+            generate_embeddings_task.delay(self.id)
+
         self.verified = status
         self.verified_by = user
         self.status = "approved" if status else "rejected"

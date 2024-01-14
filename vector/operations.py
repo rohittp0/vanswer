@@ -18,9 +18,9 @@ def mean_pooling(model_output, attention_mask):
 
 def generate_image_description(image: BytesIO) -> str:
     image = Image.open(image)
-    model, processor = get_image_embedder()
+    processor, model = get_image_embedder()
 
-    inputs = processor(images=image, return_tensors="pt").to(device)
+    inputs = processor(images=image, text="What do you see in the image? The image", return_tensors="pt").to(device)
 
     predictions = model.generate(**inputs, max_new_tokens=3000)
     texts = processor.batch_decode(predictions, skip_special_tokens=True)

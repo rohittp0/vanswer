@@ -36,8 +36,8 @@ def get_image_embedder():
     global image_embedder
     if image_embedder is None:
         image_embedder = (
-            Pix2StructForConditionalGeneration.from_pretrained("google/pix2struct-ai2d-base"),
-            Pix2StructProcessor.from_pretrained("google/pix2struct-ai2d-base")
+            Pix2StructProcessor.from_pretrained("google/pix2struct-ai2d-base"),
+            Pix2StructForConditionalGeneration.from_pretrained("google/pix2struct-ai2d-base")
         )
 
         image_embedder[1].to(device)
