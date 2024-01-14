@@ -43,6 +43,12 @@
                         class="form-inline"
                         action="{% url 'search' %}"
                 >
+                    {% for key, value in request.GET.items %}
+                        {% if key != "format" %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endif %}
+                    {% endfor %}
+
                     <div class="input-group search ">
                         <div class="input-group-prepend">
 

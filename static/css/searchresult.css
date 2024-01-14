@@ -321,9 +321,14 @@
 
 .img-fluid {
     max-width: 100%;
-    object-fit: contain;
-    height: 7rem;
+    object-fit: cover;
     margin-top: 1.5rem;
+
+}
+
+.carousel-item .img-fluid {
+    height: 24rem;
+    width: 100%;
 }
 
 .card-right {
@@ -425,28 +430,33 @@ hr {
     border-color: black;
 }
 
-.pagingation-container {
+.pagination-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     width: 100%;
     align-items: center;
-    margin-top: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
 }
 
-.pages{
+
+.pages {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1rem;
 }
-.pages a{
+
+.pages a {
     color: black;
     background-color: transparent;
     border-color: black;
     text-decoration: none;
 }
 
-.pages a:hover{
+.pages a:hover {
     color: #283f66;
 }
+
+

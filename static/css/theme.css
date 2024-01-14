@@ -1,0 +1,39 @@
+.theme-heading{
+    margin: 2rem 0;
+    padding-left: var(--margin-x);
+    font-weight: bolder;
+}
+
+.card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 2px black solid;
+    border-radius: 0;
+    min-width: 10rem;
+    justify-self: center;
+
+}
+
+.theme-image{
+    padding: 2rem;
+}
+
+.theme-title{
+    width: 100%;
+    border-top: 2px black solid;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+.theme-container{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 2rem 0;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
