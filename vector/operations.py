@@ -5,8 +5,9 @@ import fitz
 
 import torch
 import torch.nn.functional as F
+from PIL import Image
 
-from vector.store import EmbeddingParams, get_embedder, device, Embeds
+from vector.store import EmbeddingParams, get_embedder, device, Embeds, get_image_embedder
 
 
 def mean_pooling(model_output, attention_mask):
@@ -16,17 +17,14 @@ def mean_pooling(model_output, attention_mask):
 
 
 def generate_image_description(image: BytesIO) -> str:
-    # Process the image
-    # image = Image.open(image)
-    # model = Pix2StructForConditionalGeneration.from_pretrained("google/pix2struct-ai2d-base")
-    # processor = Pix2StructProcessor.from_pretrained("google/pix2struct-ai2d-base")
-    #
-    # inputs = processor(images=image, return_tensors="pt")
-    #
-    # predictions = model.generate(**inputs, max_new_tokens=3000)
-    # texts = processor.batch_decode(predictions, skip_special_tokens=True)
-    # return "\n".join(texts)[:8000]
-    return ""
+    image = Image.open(image)
+    model, processor = get_image_embedder()
+
+    inputs = processor(images=image, return_tensors="pt").to(device)
+
+    predictions = model.generate(**inputs, max_new_tokens=3000)
+    texts = processor.batch_decode(predictions, skip_special_tokens=True)
+    return "\n".join(texts)
 
 
 def texts_to_embeddings(text: List[str]) -> List[float]:

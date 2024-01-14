@@ -5,9 +5,68 @@
 
     <title>searchresult</title>
     <link rel="stylesheet" href="{% static 'css/searchresult.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}"/>
 
 {% endblock head %}
 {% block content %}
+
+    <nav style="--bs-breadcrumb-divider: '>';" class="breadcrumb-container" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Green Rural Livelihoods</a></li>
+            {% if org %}
+                <li class="breadcrumb-item"><a href="/organisation">Organizations</a></li>{% endif %}
+            <li class="breadcrumb-item active" aria-current="page">Search</li>
+        </ol>
+    </nav>
+    {% if org %}
+
+        <div class="org-container">
+            <div class="org-title">
+                explore resources from {{ org.name }}
+            </div>
+            <div class="banner">
+                <div id="carouselExampleControls" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {#                    {{ org.image_set.all }}#}
+                        {% for org_image in org.org_images.all %}
+                            <div class="carousel-item active">
+                                <img src="{{ org_image.image.url }}" class="d-block w-100" alt="...">
+                            </div>
+
+                            {% empty %}
+                            <div class="carousel-item active">
+                                <img src="{{ org.banner_image.url }}" class="d-block w-100" alt="...">
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+                <div class="banner-text">
+                    <div class="bold">LEARN THE ESSENTIALS OF NATURAL FARMING</div>
+                    <div>Discover playbooks, guides and more on the principles of Natural Farming!</div>
+                </div>
+            </div>
+            <div class="org-desc">
+                <div class="org-desc-title">
+                    About {{ org.name }}
+                </div>
+                <div class="org-desc-content">
+                    {{ org.description }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
     <div class="row flex flex-sm-row">
         <div class="filter col-lg-2 col-md-2 col-sm-1 col-12">
@@ -17,15 +76,55 @@
                 <div class="accordion" id="acc">
                     <input type="hidden" name="query" value={{ request.GET.query }}>
 
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseDate" aria-expanded="true"
+                                    aria-controls="collapseDate">
+                                <div class="accordion-title">
+                                    Date
+
+                                </div>
+                            </button>
+                            </button>
+                        </h2>
+                        <div id="collapseDate" class="accordion-collapse collapse"
+                             data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <ul class="drop-menu">
+
+
+                                    <li class="no-border">
+                                        <div class="date-filter">
+                                            <label for="from">From</label>
+                                            <input name="date-from" type="number" min="1900" max="{% now "Y" %}"
+                                                   step="1" value="{{ request.GET|get_querydict_item:"date-from" }}"/>
+                                        </div>
+                                        <div class="date-filter">
+                                            <label for="to">To</label>
+                                            <input name="date-to" type="number" min="1900" max="{% now "Y" %}" step="1"
+                                                   value="{{ request.GET|get_querydict_item:"date-to" }}"/>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
                     {% get_filters as filters %}
 
                     {% for name, values in filters.items %}
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapse{{ name }}" aria-expanded="true"
                                         aria-controls="collapse{{ name }}">
-                                    {{ name }}
+                                    <div class="accordion-title">
+                                        {{ name }}
+
+                                    </div>
+                                </button>
                                 </button>
                             </h2>
                             <div id="collapse{{ name }}" class="accordion-collapse collapse"
@@ -35,22 +134,35 @@
 
 
                                         {% for fil_value, fil_name  in values.1 %}
-                                            <li>
-                                                <div class="check">
-                                                    <label class="form-check-label" for="flexCheckDefault">
-                                                        <span>{{ fil_name }}</span>
-                                                    </label>
-                                                    {% with get_param=request.GET|get_querydict_item:values.0 %}
-                                                        {% with checked=get_param|filter_in:fil_value %}
-                                                            <input name={{ values.0 }} class="form-check-input"
-                                                                   type="checkbox"
-                                                                   value="{{ fil_value }}"
-                                                                   {% if checked %}checked{% endif %}
-                                                            >
+                                            {% if values.2 == "checkbox" %}
+                                                <li>
+                                                    <div class="check">
+                                                        <label class="form-check-label" for="flexCheckDefault">
+                                                            <span>{{ fil_name }}</span>
+                                                        </label>
+                                                        {% with get_param=request.GET|get_querydict_list:values.0 %}
+                                                            {% with checked=get_param|filter_in:fil_value %}
+                                                                <input name={{ values.0 }} class="form-check-input"
+                                                                       type="checkbox"
+                                                                       value="{{ fil_value }}"
+                                                                       {% if checked %}checked{% endif %}
+                                                                >
+                                                            {% endwith %}
                                                         {% endwith %}
-                                                    {% endwith %}
-                                                </div>
-                                            </li>
+                                                    </div>
+                                                </li>
+                                            {% elif values.2 == "radio" %}
+                                                {% with get_param=request.GET|get_querydict_item:values.0 %}
+                                                    <li class="d-flex flex-row justify-content-between">
+
+                                                        <span>{{ fil_name }}</span>
+
+                                                        <input type="radio" name="{{ values.0 }}"
+                                                               value="{{ fil_value }}"
+                                                               {% if get_param == fil_value %}checked{% endif %}>
+                                                    </li>
+                                                {% endwith %}
+                                            {% endif %}
                                         {% endfor %}
 
 
@@ -90,7 +202,7 @@
         </div>
 
 
-        <div class="result col-lg-9 col-md-9 col-sm-10 col-12">
+        <div class="result-container col-lg-9 col-md-9 col-sm-10 col-12">
             {#            <h4>Refined By</h4>#}
             {#            {% for mes in messages %}#}
             {#                <div class="alert  alert-dismissible fade show" role="alert">#}
@@ -101,28 +213,38 @@
             {#                </div>#}
             {#            {% endfor %}#}
             <div class="tittle">
-                <h2>search manuals</h2>
+                <h2>search {{ format }}</h2>
                 <div class="sort">
-                    <form method="GET">
+                    <form method="GET" class="arrange-form">
+                        {% for key, value in request.GET.items %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endfor %}
                         <div class="input-group1">
-                            <div>
-                                <h6>View</h6>
-                                <div class="input-group-prepend">
-
-                                    <select class="view" name="search_type">
-                                        <option value="meta" selected>List</option>
-                                        <option value="elements">view2</option>
-                                    </select>
-                                </div>
-                            </div>
+                            {#                            <div>#}
+                            {#                                <h6>View</h6>#}
+                            {#                                <div class="input-group-prepend">#}
+                            {##}
+                            {#                                    <select class="view" name="search_type">#}
+                            {#                                        <option value="meta" selected>List</option>#}
+                            {#                                        <option value="elements">view2</option>#}
+                            {#                                    </select>#}
+                            {#                                </div>#}
+                            {#                            </div>#}
                             <div>
                                 <h6>Sort by</h6>
                                 <div class="input-group-prepend">
 
-                                    <select class="sort-by" name="search_type">
-                                        <option value="" selected>Select</option>
+                                    <select class="sort-by" name="sort_by">
+                                        <option value="" selected></option>
 
-                                        <option value="date" selected>Date</option>
+                                        <option value="oldest" {% if request.GET.sort_by == "oldest" %}
+                                                selected{% endif %}>
+                                            Oldest first
+                                        </option>
+                                        <option value="latest" {% if request.GET.sort_by == "latest" %}
+                                                selected{% endif %}>
+                                            Latest first
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -135,29 +257,78 @@
                 </div>
             </div>
 
-            {% for result in results %}
-                <hr>
+            <div class="results">
+                {% for result in page_obj %}
+                    <hr>
 
-                <div class="mb-3 border-0">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <img id="image" src={% get_media_prefix %}{{ result.image_url }} class="img-fluid" alt="search_image">
-                        </div>
+                    <div class="mb-3 border-0">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <img id="image" src={% get_media_prefix %}{{ result.image_url }} class="img-fluid"
+                                     alt="search_image">
+                            </div>
 
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ result.category }}</h5>
-                                <p class="content">{{ result.title }}</p>
-                                <p>Contributor : <span>{{ result.contributor }}</span></p>
-                                <p>Date: 2022</p>
-                                <p>Resource: <a href={{ result.read_more_url }} target="_blank">View</a></p>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ result.category }}</h5>
+                                    <p class="content">{{ result.title }}</p>
+                                    <p><span class="bold">Contributor</span> : <span>{{ result.contributor }}</span>
+                                    </p>
+                                    <p><span class="bold">Date</span>: 2022</p>
+                                    <p><span class="bold">Resource</span>: <a
+                                            href={{ result.read_more_url }} target="_blank">View</a></p>
 
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
+            {% if page_obj %}
 
+                <div class="pagingation-container">
+                    <ul class="pagination">
+                        <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                            <a class="page-link"
+                               href="{% url 'search' %}?{% query_transform request page=page_obj.number|add:"-1" %}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        {% for page_number in page_obj.paginator.page_range|slice:":3" %}
+                            <li class="page-item {% if page_number == page_obj.number %}active{% endif %}"><a
+                                    class="page-link"
+                                    href="{% url 'search' %}?{% query_transform request page=page_number %}">{{ page_number }}</a>
+                            </li>
+                        {% endfor %}
+                        <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                            <a class="page-link"
+                               href="{% url 'search' %}?{% query_transform request page=page_obj.number|add:"1" %}"
+                               aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="pages">
+                        <a href="{% url 'search' %}?{% query_transform request page=1 %}">&laquo; First</a>
+
+                        <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                        <a href="{% url 'search' %}?{% query_transform request page=page_obj.paginator.num_pages %}">Last
+                            &raquo;</a>
+
+
+                    </div>
+
+
+                </div>
+
+            {% endif %}
         </div>
 
     </div>
