@@ -1,13 +1,18 @@
+import numpy as np
 import requests
 from django.conf import settings
 from django.contrib.postgres.search import SearchQuery
+from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from pdf2image import convert_from_path
-from home.models import MetaData, Organization
+from pgvector.django import L2Distance
 
 from home.constants import get_display_name, category_choices
+from home.models import MetaData, Organization
+from vector.models import Embedding
+from vector.operations import texts_to_embeddings
+from vector.tasks import get_embeddings
 
 collection_name = "main"
 
@@ -44,7 +49,6 @@ def home(request):
 
 def search(request):
     query_text = request.GET.get('query')
-    search_type = request.GET.get('search_type')
     metadata = MetaData.objects.all()
 
     if not request.GET.getlist('format'):
@@ -53,8 +57,9 @@ def search(request):
     results = []
 
     if query_text:
-        api_result, metas = get_from_api("meta" if search_type is None else search_type, query_text)
-        metadata = metadata.filter(meta_id__in=[meta.meta_id for meta in metas])
+        query_emdeddings = texts_to_embeddings(query_text)
+        embeddings = Embedding.objects.order_by(L2Distance('embedding', query_emdeddings[0]))
+        metadata = metadata.filter(meta_id__in=[emb.meta_data for emb in embeddings])
 
         # filtering
 
@@ -90,18 +95,17 @@ def search(request):
         metadata = metadata.order_by('date')
 
     if query_text:
-        for meta in metas:
-            for element in filter(lambda x: x[0] == meta.meta_id, api_result):
-                meta_data = metadata.get(meta_id=meta.meta_id)
-                if meta_data:
-                    results.append({
-                        'image_url': meta_data.preview_image,
-                        'title': f"{meta.title} - Page No: {element[1] + 1}",
-                        'description': meta.description,
-                        'read_more_url': f"{meta.file_data.first().file.url}#page={element[1] + 1}",
-                        'contributor': meta_data.contributor,
-                        'category': meta_data.get_category_display(),
-                    })
+        for emb in embeddings:
+            meta_data = metadata.get(meta_id=emb.meta_data)
+            if meta_data:
+                results.append({
+                    'image_url': meta_data.preview_image,
+                    'title': f"{meta_data.title} - Page No: {emb.index + 1}",
+                    'description': meta_data.description,
+                    'read_more_url': f"{meta_data.file_data.first().file.url}#page={emb.index + 1}",
+                    'contributor': meta_data.contributor,
+                    'category': meta_data.get_category_display(),
+                })
     else:
         for meta in metadata:
             results.append({
@@ -113,8 +117,19 @@ def search(request):
                 'category': meta.get_category_display(),
             })
 
+    paginator = Paginator(results, 10)
+    page_number = request.GET.get('page')
+
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
     return render(request, 'home/searchresult.html',
-                  {'query': query_text, 'results': results, 'org': org_data, 'format': get_display_name(category_choices, category[0])})
+                  {'query': query_text, 'page_obj': page_obj, 'org': org_data,
+                   'format': get_display_name(category_choices, category[0])})
 
 
 def organization(request):
