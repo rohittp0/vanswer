@@ -27,7 +27,6 @@
             <div class="banner">
                 <div id="carouselExampleControls" class="carousel slide carousel-fade" data-bs-ride="carousel">
                     <div class="carousel-inner">
-                        {#                    {{ org.image_set.all }}#}
                         {% for org_image in org.org_images.all %}
                             <div class="carousel-item active">
                                 <img src="{{ org_image.image.url }}" class="d-block w-100" alt="...">
@@ -35,7 +34,10 @@
 
                             {% empty %}
                             <div class="carousel-item active">
-                                <img src="{{ org.banner_image.url }}" class="d-block w-100" alt="...">
+                                <img class="img-fluid"
+                                {% if value.logo %} src="{{ value.logo.url }}" {% else %}
+                             src="{% static "images/placeholder.png" %}" {% endif %}
+                             alt="{{ value.name }}">
                             </div>
                         {% endfor %}
 
@@ -94,12 +96,12 @@
 
                                     <li class="no-border">
                                         <div class="date-filter">
-                                            <label for="date-from">From</label>
+                                            <label for="date-from">Start Year</label>
                                             <input id="date-from" name="date-from" type="number" min="1900" max="{% now "Y" %}"
                                                    step="1" value="{{ request.GET|get_querydict_item:"date-from" }}"/>
                                         </div>
                                         <div class="date-filter">
-                                            <label for="date-to">To</label>
+                                            <label for="date-to">End Year</label>
                                             <input id="date-to" name="date-to" type="number" min="1900" max="{% now "Y" %}" step="1"
                                                    value="{{ request.GET|get_querydict_item:"date-to" }}"/>
                                         </div>

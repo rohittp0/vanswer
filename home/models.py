@@ -16,7 +16,7 @@ class Organization(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
     website = models.URLField()
-    image = models.ImageField(upload_to="organization_img", null=True, blank=True)
+    logo = models.ImageField(upload_to="organization_logo", null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -25,6 +25,10 @@ class Organization(models.Model):
 class OrgImages(models.Model):
     org = models.ForeignKey(Organization, default=None, on_delete=models.CASCADE, related_name="org_images")
     image = models.ImageField(upload_to="organization_img", verbose_name="image")
+
+    class Meta:
+        verbose_name = 'Carousel Image'
+        verbose_name_plural = 'Carousel Images'
 
 
 class MetaData(models.Model):
@@ -88,7 +92,7 @@ class FileData(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if self.type == 'pdf':
+        if self.type == 'pdf' and not self.meta_data.preview_image:
             self.create_preview_image()
 
     def create_preview_image(self):

@@ -2,24 +2,27 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static "css/organization.css" %}">
+    <link rel="stylesheet" href="{% static "css/organization.css" %}">
 {% endblock head %}
 
 {% block content %}
-<h3 id="org-tittle">Explore by organizations</h3>
+    <h3 id="org-tittle">Explore by organizations</h3>
 
-<div class='card-container'>
-{% for value in details %}
-<div class="card col-sm col-md-6 col-lg-3 ftco-animate">
-    <div class="organization">
-        <a href="{% url 'search' %}?org={{ value.id }}&format=report" class="img-prod">
-            <img class="img-fluid" src="{{ value.banner_image.url }}" alt="{{ value.name }}">
-        </a>
-    </div> 
-</div>
-<hr>
-{% endfor %}
-</div>
+    <div class='card-container'>
+        {% for value in details %}
+            <div class="card col-sm col-md-6 col-lg-3 ftco-animate">
+                <div class="organization">
+                    <a href="{% url 'search' %}?org={{ value.id }}&format=report" class="img-prod">
+                        <img class="img-fluid"
+                                {% if value.logo %} src="{{ value.logo.url }}" {% else %}
+                             src="{% static "images/placeholder.png" %}" {% endif %}
+                             alt="{{ value.name }}">
+                    </a>
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
 
 {% endblock content %}
 
