@@ -15,28 +15,6 @@ from vector.operations import texts_to_embeddings
 collection_name = "main"
 
 
-def get_from_api(api: str, query: str):
-    query = query.strip()
-    verified = MetaData.objects.filter(verified=True)
-
-    result = requests.get(f"{settings.VECTOR_API_URL}/search/{api}/", params={
-        "expr": "type == 0" if api == "elements" else "",
-        "query": query,
-        "limit": 10,
-    }).json()
-
-    if api == "elements":
-        api_result = {(o["meta_id"], o["index"]): o for o in result}
-    else:
-        query = SearchQuery("|".join(query.split(" ")), search_type="raw")
-        api_result = {(o.meta_id, 0) for o in verified.filter(description_vector=query).all()}
-        api_result = api_result.union({(o["id"], 0) for o in result})
-
-    meta_ids = list({o[0] for o in api_result})
-    metas = verified.filter(Q(meta_id__in=meta_ids)).all()
-
-    return api_result, metas
-
 
 def home(request):
     return render(request, 'home/home.html')
