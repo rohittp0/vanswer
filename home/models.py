@@ -7,9 +7,9 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import models
+import fitz
 
 from home.constants import language_choices, category_choices, file_types, state_choices, url_types
-from pdf2image import convert_from_path
 from vanswer.utils import ChoiceArrayField
 
 
@@ -99,15 +99,26 @@ class FileData(models.Model):
         output_folder = os.path.join(settings.MEDIA_ROOT, 'previews')
         os.makedirs(output_folder, exist_ok=True)
 
-        images = convert_from_path(pdf_path, first_page=1, last_page=1, dpi=72)
-        if images:
-            preview_image_name = f'preview_{self.pk}.jpg'
-            image_path = Path(output_folder) / preview_image_name
-            images[0].save(str(image_path), 'JPEG')
+        doc = fitz.open(pdf_path)
 
+        if len(doc) > 0:  # Check if there's at least one page
+            page = doc.load_page(0)  # First page
+
+            # Render the page to a pixmap (an image)
+            pix = page.get_pixmap(dpi=72)  # or use another DPI value as needed
+
+            # Create the preview image path
+            preview_image_name = f'preview_{self.pk}.png'  # PNG is better for quality
+            image_path = Path(output_folder) / preview_image_name
+
+            # Save the pixmap as an image
+            pix.save(str(image_path))
+
+            # Set the relative path of the preview image in the model
             image_relative_path = image_path.relative_to(Path(settings.MEDIA_ROOT))
             self.meta_data.preview_image = str(image_relative_path)
             self.meta_data.save()
+
 
 
 class UrlData(models.Model):

@@ -63,6 +63,7 @@ services:
       DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL}
       DEBUG: ${DEBUG}
       HOST: ${HOST}
+      RABBITMQ_HOST: "rabbitmq"
     ports:
       - "8000:8000"
     volumes:

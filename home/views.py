@@ -2,11 +2,12 @@ import numpy as np
 import requests
 from django.conf import settings
 from django.contrib.postgres.search import SearchQuery
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from pgvector.django import L2Distance
+from pgvector.django import L2Distance, MaxInnerProduct
 
 from home.constants import get_display_name, category_choices
 from home.models import MetaData, Organization
@@ -57,10 +58,10 @@ def search(request):
     results = []
 
     if query_text:
-        print("searching", flush=True)
         query_emdeddings = texts_to_embeddings(query_text)
-        embeddings = Embedding.objects.order_by(L2Distance('embedding', query_emdeddings[0]))
-        metadata = metadata.filter(meta_id__in=[emb.meta_data for emb in embeddings])
+        embeddings = Embedding.objects.order_by(MaxInnerProduct('embedding', query_emdeddings[0]))
+        metadata = metadata.filter(id__in=set([emb.meta_data.id for emb in embeddings]))
+
 
         # filtering
 
@@ -97,16 +98,19 @@ def search(request):
 
     if query_text:
         for emb in embeddings:
-            meta_data = metadata.get(meta_id=emb.meta_data)
-            if meta_data:
+            try:
+                meta = metadata.get(id=emb.meta_data.id)
                 results.append({
-                    'image_url': meta_data.preview_image,
-                    'title': f"{meta_data.title} - Page No: {emb.index + 1}",
-                    'description': meta_data.description,
-                    'read_more_url': f"{meta_data.file_data.first().file.url}#page={emb.index + 1}",
-                    'contributor': meta_data.contributor,
-                    'category': meta_data.get_category_display(),
+                    'image_url': meta.preview_image,
+                    'title': f"{meta.title} - Page No: {emb.offset + 1}",
+                    'description': meta.description,
+                    'read_more_url': f"{meta.file_data.all()[emb.index].file.url}#page={emb.offset + 1}",
+                    'contributor': meta.contributor,
+                    'category': meta.get_category_display(),
                 })
+            except ObjectDoesNotExist:
+                pass
+
     else:
         for meta in metadata:
             results.append({
