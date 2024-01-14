@@ -1,10 +1,10 @@
 from celery import shared_task
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 from home.models import FileData, MetaData
 from vector.models import Embedding
-from vector.operations import process_pdf, elements_to_embeddings
+from vector.operations import process_pdf, elements_to_embeddings, texts_to_embeddings
 
 
 def get_embeddings(file_data: FileData):
@@ -41,6 +41,13 @@ def generate_embeddings_task(meta_id: int):
     instance.save()
 
 
+@shared_task
+def update_embedding_task(embedding_id: int):
+    embedding = Embedding.objects.get(id=embedding_id)
+    embedding.embedding = texts_to_embeddings([embedding.text])[0]
+    embedding.save()
+
+
 @receiver(post_save, sender=MetaData)
 def generate_embeddings(sender, instance, created, **kwargs):
     if created or instance.status != "approved":
@@ -51,3 +58,12 @@ def generate_embeddings(sender, instance, created, **kwargs):
         instance.save()
 
     generate_embeddings_task.delay(instance.id)
+
+
+@receiver(pre_save, sender=Embedding)
+def update_embedding(sender, instance, **kwargs):
+    # return if instance.text has not changed
+    if kwargs['update_fields'] is None or "text" not in kwargs['update_fields']:
+        return
+
+    update_embedding_task.delay(instance.id)
