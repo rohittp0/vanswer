@@ -31,8 +31,10 @@ def search(request):
 
     results = []
 
+    embeddings = Embedding.objects.filter(meta_data__verified=True)
+
     query_emdeddings = texts_to_embeddings(query_text)
-    embeddings = Embedding.objects.order_by(MaxInnerProduct('embedding', query_emdeddings[0]))
+    embeddings = embeddings.order_by(MaxInnerProduct('embedding', query_emdeddings[0]))
 
     org = request.GET.get('org')
     org_data = None
