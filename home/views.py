@@ -79,11 +79,14 @@ def search(request):
 
     location = request.GET.getlist('location')
     if location:
-        embeddings = embeddings.filter(meta_data__states__contains=location)
+        query = Q(meta_data__states__contains=[location[0]])
+        for state in location[1:]:
+            query |= Q(meta_data__states__contains=[state])
+        embeddings = embeddings.filter(query)
 
     sort = request.GET.get('sort_by')
     if sort == "oldest":
-        embeddings = embeddings.order_by('meta_data__-date')
+        embeddings = embeddings.order_by('-meta_data__date')
     elif sort == "latest":
         embeddings = embeddings.order_by('meta_data__date')
 
