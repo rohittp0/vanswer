@@ -49,7 +49,7 @@ def update_embedding_task(embedding_id: int):
 
 
 @receiver(post_save, sender=MetaData)
-def generate_embeddings(sender, instance, created, **kwargs):
+def generate_embeddings(sender, instance, created, **_):
     if created or instance.status != "approved":
         return
 

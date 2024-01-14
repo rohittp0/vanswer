@@ -12,7 +12,9 @@
 {% for value in details %}
 <div class="card col-sm col-md-6 col-lg-3 ftco-animate">
     <div class="organization">
-        <a href="/search/?org={{ value.id }}&format=report" class="img-prod"><img class="img-fluid" src="{{ value.banner_image.url }}" alt="{{ value.name }}"></a>
+        <a href="{% url 'search' %}?org={{ value.id }}&format=report" class="img-prod">
+            <img class="img-fluid" src="{{ value.banner_image.url }}" alt="{{ value.name }}">
+        </a>
     </div> 
 </div>
 <hr>
