@@ -1,19 +1,16 @@
-import numpy as np
 import requests
 from django.conf import settings
 from django.contrib.postgres.search import SearchQuery
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from pgvector.django import L2Distance, MaxInnerProduct
+from pgvector.django import MaxInnerProduct
 
 from home.constants import get_display_name, category_choices
 from home.models import MetaData, Organization
 from vector.models import Embedding
 from vector.operations import texts_to_embeddings
-from vector.tasks import get_embeddings
 
 collection_name = "main"
 
@@ -49,78 +46,57 @@ def home(request):
 
 
 def search(request):
-    query_text = request.GET.get('query')
-    metadata = MetaData.objects.all()
+    query_text = request.GET.get('query') or ""
 
     if not request.GET.getlist('format'):
         return HttpResponseRedirect('/')
 
     results = []
 
-    if query_text:
-        query_emdeddings = texts_to_embeddings(query_text)
-        embeddings = Embedding.objects.order_by(MaxInnerProduct('embedding', query_emdeddings[0]))
-        metadata = metadata.filter(id__in=set([emb.meta_data.id for emb in embeddings]))
-
-
-        # filtering
+    query_emdeddings = texts_to_embeddings(query_text)
+    embeddings = Embedding.objects.order_by(MaxInnerProduct('embedding', query_emdeddings[0]))
 
     org = request.GET.get('org')
     org_data = None
     if org:
-        metadata = metadata.filter(organization=org)
+        embeddings = embeddings.filter(meta_data__organization=org)
         org_data = Organization.objects.get(id=org)
 
     start_year = request.GET.get('date-from')
     end_year = request.GET.get('date-to')
     if start_year:
-        metadata = metadata.filter(date__year__gte=start_year)
+        embeddings = embeddings.filter(meta_data__date__year__gte=start_year)
     if end_year:
-        metadata = metadata.filter(date__year__lte=end_year)
+        embeddings = embeddings.filter(meta_data__date__year__lte=end_year)
 
     language = request.GET.getlist('language')
     if language:
-        metadata = metadata.filter(language__in=language)
+        embeddings = embeddings.filter(meta_data__language__in=language)
 
     category = request.GET.getlist('format')
-    if format:
-        metadata = metadata.filter(category__in=category)
+    if category:
+        embeddings = embeddings.filter(meta_data__category__in=category)
 
     location = request.GET.getlist('location')
     if location:
-        metadata = metadata.filter(states__contains=location)
+        embeddings = embeddings.filter(meta_data__states__contains=location)
 
     sort = request.GET.get('sort_by')
     if sort == "oldest":
-        metadata = metadata.order_by('-date')
+        embeddings = embeddings.order_by('meta_data__-date')
     elif sort == "latest":
-        metadata = metadata.order_by('date')
+        embeddings = embeddings.order_by('meta_data__date')
 
-    if query_text:
-        for emb in embeddings:
-            try:
-                meta = metadata.get(id=emb.meta_data.id)
-                results.append({
-                    'image_url': meta.preview_image,
-                    'title': f"{meta.title} - Page No: {emb.offset + 1}",
-                    'description': meta.description,
-                    'read_more_url': f"{meta.file_data.all()[emb.index].file.url}#page={emb.offset + 1}",
-                    'contributor': meta.contributor,
-                    'category': meta.get_category_display(),
-                })
-            except ObjectDoesNotExist:
-                pass
 
-    else:
-        for meta in metadata:
-            results.append({
-                'image_url': meta.preview_image,
-                'title': f"{meta.title}",
-                'description': meta.description,
-                'read_more_url': f"{meta.file_data.first().file.url}",
-                'contributor': meta.contributor,
-                'category': meta.get_category_display(),
-            })
+    for emb in embeddings:
+        results.append({
+            'image_url': emb.meta_data.preview_image,
+            'title': f"{emb.meta_data.title} - Page No: {emb.offset + 1}",
+            'description': emb.meta_data.description,
+            'read_more_url': f"{emb.meta_data.file_data.all()[emb.index].file.url}#page={emb.offset + 1}",
+            'contributor': emb.meta_data.contributor,
+            'category': emb.meta_data.get_category_display(),
+        })
 
     paginator = Paginator(results, 10)
     page_number = request.GET.get('page')
@@ -140,3 +116,7 @@ def search(request):
 def organization(request):
     details = Organization.objects.all()
     return render(request, 'home/organization.html', {'details': details})
+
+
+def themes(request):
+    return render(request, 'home/themes.html')
