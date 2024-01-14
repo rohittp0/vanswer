@@ -17,10 +17,15 @@ class Organization(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
     website = models.URLField()
-    image = models.ImageField(upload_to="organization_img", null=True, blank=True)
+    banner_image = models.ImageField(upload_to="organization_img", null=True, blank=True)
+
 
     def __str__(self):
         return self.name
+
+class Org_Images(models.Model):
+    org = models.ForeignKey(Organization, default=None, on_delete=models.CASCADE, related_name="org_images")
+    image = models.ImageField(upload_to="organization_img", verbose_name="image")
 
 
 class MetaData(models.Model):

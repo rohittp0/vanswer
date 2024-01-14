@@ -57,6 +57,7 @@ def search(request):
     results = []
 
     if query_text:
+        print("searching", flush=True)
         query_emdeddings = texts_to_embeddings(query_text)
         embeddings = Embedding.objects.order_by(L2Distance('embedding', query_emdeddings[0]))
         metadata = metadata.filter(meta_id__in=[emb.meta_data for emb in embeddings])

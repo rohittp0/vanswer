@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from home.models import MetaData, UrlData, FileData, Organization
+from home.models import MetaData, UrlData, FileData, Organization, Org_Images
 
 
 # Register your models here.
@@ -16,6 +16,10 @@ class UrlDataInline(admin.StackedInline):
     fk_name = 'meta_data'
     extra = 0
     max_num = 0
+
+class OrgImagesInline(admin.TabularInline):
+    model = Org_Images
+    extra = 1
 
 
 @admin.register(MetaData)
@@ -55,6 +59,7 @@ class MetaDataAdmin(admin.ModelAdmin):
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
+    inlines = [OrgImagesInline]
     list_per_page = 25
 
 
