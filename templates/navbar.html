@@ -13,9 +13,10 @@
         <div class="navbar-brand">
             <a href="{% url 'home' %}">
                 <img
-                        src="{% static 'images/logo.png' %}"
+                        src="{% static 'images/logo.jpg' %}"
                         alt="logo"
-                        class="navimage img-fluid"
+                        class="img-fluid"
+                        width="100px"
                 />
             </a>
         </div>
@@ -49,22 +50,28 @@
                     <div class="input-group search ">
                         <div class="input-group-prepend">
 
-                            <select class="form-select" name="format">
-                                {% get_categories as categories %}
+                            <label>
+                                <select class="form-select" name="format">
+                                    {% get_categories as categories %}
 
-                                {% for val, dis in categories %}
-                                    <option value={{ val }}>{{ dis }}</option>
-                                {% endfor %}
-                            </select>
+                                    {% for val, dis in categories %}
+                                        <option value={{ val }}>{{ dis }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
                         </div>
                         <div class="search-input">
-                            <input
-                                    type="text"
-                                    class="form"
-                                    placeholder="Search..."
-                                    name="query"
-                                    value="{{ query|default_if_none:""}}"
-                            />
+                            <label>
+                                <input
+                                        type="text"
+                                        class="form"
+                                        placeholder="Search..."
+                                        name="query"
+                                        {% if query %}
+                                        value="{{ query }}"
+                                        {% endif %}
+                                />
+                            </label>
                         </div>
 
                         <div class="search-icon input-group-append">

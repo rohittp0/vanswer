@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from home.models import MetaData, UrlData, FileData, Organization, Org_Images
+from home.models import MetaData, UrlData, FileData, Organization, OrgImages
 
 
 # Register your models here.
@@ -17,8 +17,9 @@ class UrlDataInline(admin.StackedInline):
     extra = 0
     max_num = 0
 
+
 class OrgImagesInline(admin.TabularInline):
-    model = Org_Images
+    model = OrgImages
     extra = 1
 
 

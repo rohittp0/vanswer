@@ -2,7 +2,7 @@ from enum import Enum
 from typing import List, Dict
 
 import torch
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, Pix2StructForConditionalGeneration, Pix2StructProcessor
 
 
 class EmbeddingParams(Enum):
@@ -15,6 +15,7 @@ class EmbeddingParams(Enum):
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 embedder = None
+image_embedder = None
 
 
 def get_embedder():
@@ -29,6 +30,20 @@ def get_embedder():
         embedder[1].eval()
 
     return embedder
+
+
+def get_image_embedder():
+    global image_embedder
+    if image_embedder is None:
+        image_embedder = (
+            Pix2StructForConditionalGeneration.from_pretrained("google/pix2struct-ai2d-base"),
+            Pix2StructProcessor.from_pretrained("google/pix2struct-ai2d-base")
+        )
+
+        image_embedder[1].to(device)
+        image_embedder[1].eval()
+
+    return image_embedder
 
 
 Embeds = List[Dict[str, str | float]]

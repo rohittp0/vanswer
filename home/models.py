@@ -1,13 +1,12 @@
 import os
 from pathlib import Path
 
+import fitz
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import models
-import fitz
 
 from home.constants import language_choices, category_choices, file_types, state_choices, url_types
 from vanswer.utils import ChoiceArrayField
@@ -17,15 +16,19 @@ class Organization(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
     website = models.URLField()
-    banner_image = models.ImageField(upload_to="organization_img", null=True, blank=True)
-
+    logo = models.ImageField(upload_to="organization_logo", null=True, blank=True)
 
     def __str__(self):
         return self.name
 
-class Org_Images(models.Model):
+
+class OrgImages(models.Model):
     org = models.ForeignKey(Organization, default=None, on_delete=models.CASCADE, related_name="org_images")
     image = models.ImageField(upload_to="organization_img", verbose_name="image")
+
+    class Meta:
+        verbose_name = 'Carousel Image'
+        verbose_name_plural = 'Carousel Images'
 
 
 class MetaData(models.Model):
@@ -89,7 +92,7 @@ class FileData(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if self.type == 'pdf':
+        if self.type == 'pdf' and not self.meta_data.preview_image:
             self.create_preview_image()
 
     def create_preview_image(self):
@@ -118,7 +121,6 @@ class FileData(models.Model):
             image_relative_path = image_path.relative_to(Path(settings.MEDIA_ROOT))
             self.meta_data.preview_image = str(image_relative_path)
             self.meta_data.save()
-
 
 
 class UrlData(models.Model):

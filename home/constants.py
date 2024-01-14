@@ -80,8 +80,8 @@ state_choices = (
 )
 
 
-def get_display_name(list, key):
-    for item in list:
+def get_display_name(input_list, key):
+    for item in input_list:
         if item[0] == key:
             return item[1]
     return None

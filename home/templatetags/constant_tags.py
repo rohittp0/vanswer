@@ -1,6 +1,5 @@
-# myapp/templatetags/my_tags.py
-
 from django import template
+
 from home.constants import language_choices, category_choices, state_choices
 
 register = template.Library()
@@ -43,14 +42,16 @@ def get_themes():
 def get_querydict_list(dictionary, key):
     return dictionary.getlist(key, None)
 
+
 @register.filter
 def get_querydict_item(dictionary, key):
     return dictionary.get(key, None)
 
+
 @register.filter
-def filter_in(list, value):
-    if list:
-        return value in list
+def filter_in(filter_list, value):
+    if filter_list:
+        return value in filter_list
 
 
 @register.simple_tag
