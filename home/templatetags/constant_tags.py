@@ -24,6 +24,20 @@ def get_filters():
 
     return filters
 
+@register.simple_tag
+def get_themes():
+    themes = {
+        "Backyard Poultry": "Poultry Logo.png",
+        "Natural Farming": "Natural Farming Logo.png",
+        "Entrepreneurship": "Rural Entrepreneurship Logo.png",
+        "Bamboo": "Bamboo Logo.png",
+        "Waste Mgmt. ": "Waste Mgmt Logo.png",
+        "Farm Innovations. ": "Settings Logo.png",
+
+    }
+
+    return themes
+
 
 @register.filter
 def get_querydict_list(dictionary, key):

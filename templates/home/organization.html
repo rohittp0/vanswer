@@ -6,7 +6,17 @@
 {% endblock head %}
 
 {% block content %}
+
+
+
 <h3 id="org-tittle">Explore by organizations</h3>
+
+     <nav style="--bs-breadcrumb-divider: '>';" class="breadcrumb-container" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Green Rural Livelihoods</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Organizations</li>
+        </ol>
+    </nav>
 
 <div class='card-container'>
 {% for value in details %}

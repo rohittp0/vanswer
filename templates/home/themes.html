@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% load constant_tags %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "css/theme.css" %}">
+{% endblock head %}
+
+{% block content %}
+
+    <nav style="--bs-breadcrumb-divider: '>';" class="breadcrumb-container" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Green Rural Livelihoods</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Themes</li>
+        </ol>
+    </nav>
+
+    <h3 class="theme-heading">Explore by themes</h3>
+
+    <div class='theme-container'>
+        {% get_themes as themes %}
+
+        {% for theme, image in themes.items %}
+            <div class="card col-sm col-md-6 col-lg-3 ftco-animate">
+                <div class="theme-image">
+                    <a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/' %}{{ image }}"
+                                                      alt="{{ theme }}"></a>
+                </div>
+                <div class="theme-title">
+                    {{ theme }}
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+
+{% endblock content %}
+
+
