@@ -16,12 +16,7 @@ services:
 
   rabbitmq:
     container_name: rabbitmq
-    image: "rabbitmq:3-management"
-    ports:
-      - "15672:15672"
-    environment:
-        RABBITMQ_DEFAULT_USER: ${DJANGO_SUPERUSER_USERNAME}
-        RABBITMQ_DEFAULT_PASS: ${DJANGO_SUPERUSER_PASSWORD}
+    image: "rabbitmq:3"
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "rabbitmqctl status"]

@@ -15,23 +15,25 @@
                 <img
                         src="{% static 'images/logo.jpg' %}"
                         alt="logo"
-                        class="img-fluid"
-                        width="100px"
+                        height="100px"
                 />
             </a>
         </div>
         <div class="navbar-right">
             <div class="navbar-top">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle account" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        Account
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Logout</a></li>
-                    </ul>
-                </div>
+                {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle account" type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            Account
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'admin:index' %}auth/user/{{ request.user.id }}/change/">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'admin:logout' %}">Logout</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
                 <a class="nav-link" href="#">Get Email Updates</a>
                 <a class="donate" href="#">Donate</a>
             </div>
