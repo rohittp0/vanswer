@@ -8,7 +8,7 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import models
 
-from home.constants import language_choices, category_choices, file_types, state_choices, url_types
+from home.constants import language_choices, category_choices, file_types, state_choices, url_types, status_choices
 from vanswer.utils import ChoiceArrayField
 
 
@@ -48,7 +48,7 @@ class MetaData(models.Model):
     verified = models.BooleanField(default=False)
     verified_by = models.ForeignKey("auth.User", on_delete=models.SET_NULL, null=True, blank=True,
                                     related_name="verifications")
-    status = models.CharField(max_length=15, default="pending")
+    status = models.CharField(max_length=10, choices=status_choices, default="processing")
 
     preview_image = models.ImageField(upload_to='previews/', blank=True, null=True)
 

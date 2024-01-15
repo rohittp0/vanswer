@@ -14,7 +14,6 @@ language_choices = (
     ("otr", "Other"),
 )
 
-
 category_choices = (
     ("report", "Report"),
     ("case_study", "Case Study"),
@@ -26,7 +25,6 @@ category_choices = (
     ("directory", "Directory"),
     ("other", "Other"),
 )
-
 
 file_types = (
     ("pdf", "PDF"),
@@ -77,6 +75,15 @@ state_choices = (
     ("ch", "Chandigarh"),
     ("dnhdd", "Dadra & Nagar Haveli and Daman & Diu"),
     ("la", "Ladakh"),
+)
+
+status_choices = (
+    ("pending", "Pending"),
+    ("processing", "Processing"),
+    ("processed", "Processed"),
+    ("approved", "Approved"),
+    ("rejected", "Rejected"),
+    ("error", "Error")
 )
 
 

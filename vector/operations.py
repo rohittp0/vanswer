@@ -6,6 +6,7 @@ import fitz
 import torch
 import torch.nn.functional as F
 from PIL import Image
+from tqdm import tqdm
 
 from vector.store import EmbeddingParams, get_embedder, device, Embeds, get_image_embedder
 
@@ -43,7 +44,7 @@ def texts_to_embeddings(text: List[str]) -> List[float]:
 def elements_to_embeddings(pdf_elements: List[Embeds]) -> List[Embeds]:
     embeddings = []
 
-    for index in range(0, len(pdf_elements), EmbeddingParams.BATCH_SIZE.value):
+    for index in tqdm(range(0, len(pdf_elements), EmbeddingParams.BATCH_SIZE.value), desc="Elements to embeddings"):
         batch = pdf_elements[index:index + EmbeddingParams.BATCH_SIZE.value]
         texts = [element["text"] for element in batch]
         texts = texts_to_embeddings(texts)
@@ -63,7 +64,7 @@ def process_pdf(file_path: str) -> List[Dict[str, str | int]]:
 
     chunks = []
 
-    for page_num in range(len(doc)):
+    for page_num in tqdm(range(len(doc)), desc="Processing PDF"):
         page = doc.load_page(page_num)
         text = page.get_text()
 
@@ -77,10 +78,10 @@ def process_pdf(file_path: str) -> List[Dict[str, str | int]]:
             chunks.append({"text": chunk_text, "index": page_num})
 
         # Process images on the page
-        for index, img in enumerate(page.get_images(full=True)):
-            image_bytes = doc.extract_image(img[0])["image"]
-            text = generate_image_description(BytesIO(image_bytes))
-            chunks.append({"text": text, "index": page_num})
+        # for index, img in enumerate(page.get_images(full=True)):
+        #     image_bytes = doc.extract_image(img[0])["image"]
+        #     text = generate_image_description(BytesIO(image_bytes))
+        #     chunks.append({"text": text, "index": page_num})
 
     doc.close()
     return chunks

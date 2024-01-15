@@ -39,6 +39,7 @@ services:
     volumes:
       - ./:/usr/src/app
       - ${MEDIA_ROOT}:/usr/src/app/media
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/hf-models:/root/.cache/huggingface
     depends_on:
       - db
       - rabbitmq
@@ -67,7 +68,6 @@ services:
       - ./:/usr/src/app
       - ${STATIC_ROOT}:/usr/src/app/staticfiles
       - ${MEDIA_ROOT}:/usr/src/app/media
-      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/hf-models:/root/.cache/huggingface
     depends_on:
       - celery_worker
     restart: unless-stopped

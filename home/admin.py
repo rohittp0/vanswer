@@ -25,13 +25,21 @@ class OrgImagesInline(admin.TabularInline):
 
 @admin.register(MetaData)
 class MetaDataAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'status')
+    list_display = ('title', 'category', 'status', 'file_type')
     search_fields = ('title', 'description')
     readonly_fields = ('status', 'verified_by', 'verified')
+    list_filter = ('category', 'status', 'organization')
     list_per_page = 50
 
     inlines = [FileDataInline, UrlDataInline]
     actions = ["mark_as_approved", "mark_as_rejected"]
+
+    @staticmethod
+    def file_type(obj):
+        if obj.file_data.count() == 0:
+            return None
+
+        return obj.file_data.first().type
 
     def get_actions(self, request):
         if not request.user.is_superuser:
