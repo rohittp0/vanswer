@@ -57,7 +57,9 @@
                                     {% get_categories as categories %}
 
                                     {% for val, dis in categories %}
-                                        <option value={{ val }}>{{ dis }}</option>
+                                        <option value={{ val }} {% if val == request.GET.format %}selected{% endif %}>
+                                            {{ dis }}
+                                        </option>
                                     {% endfor %}
                                 </select>
                             </label>
